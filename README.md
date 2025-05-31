@@ -1,66 +1,36 @@
-# Documentação da API CarCare
+# FeatureTracker
+
+FeatureTracker é uma aplicação web moderna para gerenciamento e rastreamento de novas funcionalidades, desenvolvida com Blazor WebAssembly (.NET 9) e backend RESTful seguro. O sistema oferece autenticação JWT, integração com SQL Server, notificações em tempo real e uma interface avançada baseada em MudBlazor.
 
 ## Visão Geral
-A API CarCare é uma aplicação RESTful desenvolvida em .NET que fornece endpoints para gerenciamento de serviços automotivos.
+- **Frontend:** Blazor WebAssembly (C#/.NET 9)
+- **Backend:** ASP.NET Core RESTful API
+- **UI:** MudBlazor
+- **Banco de Dados:** SQL Server
+- **Autenticação:** JWT (JSON Web Token)
+- **Documentação:** Swagger/OpenAPI e Scalar
+- **PWA:** Suporte offline via Service Worker
 
-## Autenticação
-A API utiliza autenticação JWT (JSON Web Token) para proteger os endpoints. Para acessar endpoints protegidos, é necessário incluir o token JWT no cabeçalho da requisição:
+## Funcionalidades
+- Cadastro e autenticação de usuários (JWT)
+- Recuperação de senha por e-mail (MailKit)
+- Notificações em tempo real na interface
+- Gerenciamento de funcionalidades e roadmap
+- Integração com ferramentas de terceiros via API
+- Filtros avançados de busca
+- Interface responsiva e moderna
 
-```
-Authorization: Bearer <seu_token_jwt>
-```
-
-## Endpoints
-
+## Endpoints Principais
 ### Autenticação
+- `POST /api/v1/Auth/Login` — Login de usuário, retorna token JWT
+- `POST /api/v1/Auth/Register` — Cadastro de novo usuário
 
-#### POST /api/auth/login
-Realiza o login do usuário e retorna um token JWT.
-
-**Request Body:**
-```json
-{
-    "email": "string",
-    "password": "string"
-}
-```
-
-**Response (200 OK):**
-```json
-{
-    "token": "string",
-    "expiration": "datetime",
-    "user": {
-        "id": "string",
-        "email": "string",
-        "name": "string"
-    }
-}
-```
-
-#### POST /api/auth/register
-Registra um novo usuário no sistema.
-
-**Request Body:**
-```json
-{
-    "email": "string",
-    "password": "string",
-    "name": "string"
-}
-```
-
-**Response (200 OK):**
-```json
-{
-    "id": "string",
-    "email": "string",
-    "name": "string"
-}
-```
+### Outros Recursos
+- Notificações em tempo real
+- Recuperação de senha com link seguro (expira em 24h)
+- Documentação interativa: `/swagger` e `/scalar`
 
 ## Códigos de Status
-
 - 200: Sucesso
 - 400: Requisição inválida
 - 401: Não autorizado
@@ -68,27 +38,27 @@ Registra um novo usuário no sistema.
 - 404: Recurso não encontrado
 - 500: Erro interno do servidor
 
-## Tratamento de Erros
-A API retorna mensagens de erro no seguinte formato:
-
-```json
-{
-    "message": "string",
-    "errors": [
-        {
-            "field": "string",
-            "message": "string"
-        }
-    ]
-}
-```
-
-## Limitações e Considerações
-
-- O token JWT expira após um período determinado
+## Segurança
 - Todas as requisições devem ser feitas via HTTPS
-- Os dados sensíveis são criptografados antes de serem armazenados
-- A API implementa rate limiting para prevenir abusos
+- Tokens JWT expiram após período determinado
+- Dados sensíveis criptografados
+- Rate limiting para evitar abusos
 
-## Suporte
-Para suporte técnico ou dúvidas, entre em contato através do email: suporte@carcare.com
+## Como rodar localmente
+1. Clone o repositório
+2. Configure a string de conexão do SQL Server em `appsettings.json`
+3. Execute as migrações do Entity Framework (opcional)
+4. Rode o projeto via Visual Studio ou `dotnet run` na pasta `FeatureTracker.Server`
+5. Acesse `https://localhost:<porta>`
+
+## Tecnologias Utilizadas
+- .NET 9 (Blazor WebAssembly, ASP.NET Core)
+- MudBlazor
+- SQL Server
+- JWT
+- MailKit
+- Swagger/OpenAPI, Scalar
+
+---
+
+> Desenvolvido com ❤️ por [Gabriel Carrijo](https://github.com/carrijoga)
