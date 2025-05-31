@@ -1,0 +1,28 @@
+@inherits DashSimpleCardListBase
+
+<MudGrid Justify="Justify.FlexStart" Class="d-flex flex-column">
+    <MudItem xs="12" sm="12" md="12" lg="12">
+        <MudNavLink Href="/request/dashboard" Class="card-button-dash">
+            <MudPaper Class="card-dash pa-4" Elevation="1" Outlined="true" Style="cursor: pointer;">
+                <MudGrid Class="d-flex flex-row justify-space-between">
+                    <MudItem xs="12" sm="12" md="12" lg="12">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-center gap-2">
+                                <MudText Typo="Typo.h6">
+                                    @IconTitle @Title
+                                </MudText>
+                            </div>
+                            <div class="d-flex align-center gap-1">
+                                <MudIcon Icon="@Icons.Material.Outlined.CalendarToday" Size="Size.Small" Style="font-size: 0.75rem;" />
+                                <MudText Style="font-size: 0.95rem; line-height: 1rem;">@DeliveryDate</MudText>
+                            </div>
+                            <div class="d-flex align-center gap-1">
+                                <MudText Style="font-size: 0.75rem; line-height: 1rem;" Color="GetColorStatus()">Status: @Status</MudText>
+                            </div>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudNavLink>
+    </MudItem>
+</MudGrid>

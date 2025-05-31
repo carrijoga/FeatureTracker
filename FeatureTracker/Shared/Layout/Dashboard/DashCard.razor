@@ -1,0 +1,30 @@
+@inherits DashCardBase
+
+<MudCard  Outlined="true">
+    <MudCardContent>
+        <MudGrid Spacing="5" Class="d-flex flex-row justify-space-between">
+            <MudItem>
+                <div class="pb-3">
+                    <MudText Typo="Typo.body2">@Title</MudText>
+                    <MudText Typo="Typo.h5" Style="font-weight: bold;">@Description</MudText>
+                </div>
+                <div class="d-flex gap-1 align-center">
+                    @if(SecondaryIcon is not null)
+                    {
+                        <MudIcon Icon="@SecondaryIcon"
+                                 Size="Size.Small"
+                                 Color="@SecondaryColor"></MudIcon>
+                    }
+                    <MudText Typo="Typo.body2" Color="@SecondaryColor">@SecondaryDescription</MudText>
+                    <MudText Typo="Typo.body2">@SecondarySubDescription</MudText>
+                </div>
+
+            </MudItem>
+            <MudItem Class="pa-0 pt-5">
+                <div class="d-flex pa-1" style="background-color: #27272a; border-radius: 100px;">
+                    <MudIcon Icon="@PrincipalIcon" Size="Size.Small"></MudIcon>
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

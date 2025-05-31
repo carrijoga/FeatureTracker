@@ -1,0 +1,107 @@
+@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="true" Theme="_theme"/>
+<MudSnackbarProvider />
+
+@* <div id="splash-screen"> *@
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex justify-center align-center flex-column" Style="width: 100vw; height: 100vh;">
+        <div class="mb-8 d-flex align-center justify-center gap-2">
+            <img src="img/accelerate.svg" width="80" height="80" />
+            <MudText Typo="Typo.h2" style="font-weight: bold">FeatureTracker</MudText>
+        </div>
+
+        <div class="d-flex justify-center">
+            @Body
+        </div>
+
+        <div class="mt-8 d-flex align-center justify-center">
+            <MudText Typo="Typo.body2"> © @DateTime.Now.Year - FeatureTracker. All rights reserved.</MudText>
+        </div>
+    </MudContainer>
+@* </div> *@
+
+<style>
+    #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg,
+        hsl(222.2 84% 4.9%) 0%,
+        hsl(217.2 32.6% 17.5%) 50%,
+        hsl(222.2 84% 4.9%) 100%
+        );
+        background-size: 200% 200%;
+        animation: gradientAnimation 15s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        color: white;
+        font-size: 2rem;
+        font-family: sans-serif;
+    }
+
+    @@keyframes gradientAnimation {
+        0% {
+            background-position: 0 30%;
+        }
+        25% {
+            background-position: 50% 30%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        75% {
+            background-position: 50% 70%;
+        }
+        100% {
+            background-position: 0 50%;
+        }
+    }
+
+</style>
+
+@code {
+
+    MudTheme _theme = new()
+    {
+        PaletteDark = new PaletteDark()
+        {
+            Primary = "#377D7D", // Sua cor base
+            Secondary = "#004647", // Hover ou botões secundários
+            Background = "#121212", // Fundo geral (neutral dark)
+            Surface = "#1E1E1E", // Fundo dos cards/forms (cinza neutro)
+            AppbarBackground = "#1E1E1E",
+            DrawerBackground = "#1E1E1E",
+            DrawerText = "#E5E5E5", // Texto claro
+            DrawerIcon = "#E5E5E5",
+
+            TextPrimary = "#E5E5E5", // Quase branco
+            TextSecondary = "#A3A3A3", // Cinza médio (neutral-400)
+            ActionDefault = "#737373", // neutral-500
+            ActionDisabled = "#404040", // neutral-700
+
+            Success = "#22C55E", // verde suave
+            Warning = "#F59E0B", // amarelo suave
+            Error = "#EF4444", // vermelho
+            Info = "#60A5FA", // azul suave
+        },
+
+        Typography = new Typography()
+        {
+            Default = new DefaultTypography()
+            {
+                FontFamily = new[] { "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif" },
+            }
+        },
+
+        LayoutProperties = new LayoutProperties()
+        {
+            DefaultBorderRadius = "8px"
+        }
+    };
+
+
+}

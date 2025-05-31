@@ -1,0 +1,65 @@
+﻿@inherits NotificationComponentBase
+
+<MudTooltip Text="Notifications" Arrow="true" Placement="Placement.Bottom">
+    <MudBadge Dot="true" Color="Color.Info">
+        <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Size="Size.Small" Color="Color.Inherit"
+                       DropShadow="true" OnClick="ToggleOpen"/>
+    </MudBadge>
+</MudTooltip>
+
+<MudPopover Open="Open"
+            OverflowBehavior="OverflowBehavior.FlipAlways"
+            AnchorOrigin="Origin.BottomLeft"
+            TransformOrigin="Origin.TopCenter"
+            Paper="false"
+            Class="rounded-lg">
+    <MudPaper Outlined="true" Class="px-2 py-4">
+        <div class="d-flex justify-space-between align-center px-2">
+            <MudText Typo="Typo.subtitle2">Notifications</MudText>
+            <MudButton Variant="Variant.Text"
+                       StartIcon="@Icons.Material.Filled.DoneAll"
+                       IconSize="Size.Small"
+                       Color="Color.Secondary"
+                       Style="text-transform: none; font-size: 12px;"
+                       Class="ml-16 mr-n2"
+                       OnClick="AddMoreContent">
+                Mark all as read
+            </MudButton>
+        </div>
+
+        <MudSpacer/>
+
+        <MudDivider FlexItem="true" DividerType="DividerType.FullWidth" Class="my-2" Style="border-color: #505050;"/>
+
+        @if (Content.Count > 1)
+        {
+            <MudList T="string" Class="d-flex flex-column gap-2">
+                @foreach (var item in Content)
+                {
+                    <div data-aos="fade-down">
+                        <MudListItem Class="rounded-lg">
+                            <div class="d-flex flex-wrap justify-space-between">
+                                <MudText Typo="Typo.subtitle2">@item.Title</MudText>
+                                <MudIconButton OnClick="() => RemoveContent(item.Id)"
+                                               Icon="@Icons.Material.Filled.Check" Size="Size.Small"/>
+                            </div>
+                            <MudText Typo="Typo.body2">@item.Subtitle</MudText>
+                        </MudListItem>
+                    </div>
+                }
+            </MudList>
+        }
+        else
+        {
+            <div>
+                <MudImage/>
+                <MudText>No notification yet</MudText>
+            </div>
+        }
+
+        <div class="d-flex align-center flex-column">
+            <MudDivider FlexItem="true" DividerType="DividerType.Middle" Class="my-2" Style="border-color: #505050;"/>
+            <span style="width: 5px; height: 5px; border-radius: 50%; background-color: #004647;"></span>
+        </div>
+    </MudPaper>
+</MudPopover>

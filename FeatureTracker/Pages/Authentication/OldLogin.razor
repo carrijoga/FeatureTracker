@@ -1,0 +1,34 @@
+@page "/oldLogin"
+@layout LoginLayout
+@inherits LoginBase
+
+<MudGrid Justify="Justify.Center" Class="pa-4">
+    <MudItem xs="12" sm="12" md="6" lg="6">
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_isValid">
+                <MudTextField @bind-Value="_userAuth.Email" Label="Email"
+                              Required="true" RequiredError="Email is Required"
+                              OnBlur="ValidateEmail"
+                              Error="@ErrorValidateEmail" ErrorText="@MessageValidateEmail"/>
+
+                <MudTextField @bind-Value="_userAuth.Password"
+                              Label="Password"
+                              Required="true"
+                              RequiredError="Password is required"
+                              InputType="@_passwordInput"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@_passwordInputIcon"
+                              OnAdornmentClick="TogglePasswordVisibility"
+                              OnKeyUp="(args) => EnterPressed(args)"/>
+
+                <MudCheckBox @bind-Value="_userAuth.RememberMe" Label="Remember-me?" Dense="true"/>
+
+                <MudCardActions Class="d-flex justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                               OnClick="HandleLogin" Disabled="@(!_isValid)">Login
+                    </MudButton>
+                </MudCardActions>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

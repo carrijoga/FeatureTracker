@@ -1,0 +1,21 @@
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <Authorizing>
+                Authenticating...
+            </Authorizing>
+            <NotAuthorized>
+                Do you doesn't have permission to access this page. <a href="/">Go to Login</a>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+                <Error />
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>

@@ -1,0 +1,39 @@
+@inherits MainLayoutBase
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudPopoverProvider />
+<MudDialogProvider CloseButton="false" />
+<MudSnackbarProvider />
+
+@if (_isLoading)
+{
+    <SplashLoading />
+}
+else
+{
+    <MudLayout>
+        <AuthorizeView>
+            <Authorizing>
+                <SplashLoading />
+            </Authorizing>
+
+            <Authorized>
+                <MudAppBar ToolBarClass="d-flex justify-space-between" Color="Color.Secondary" Elevation="1" Class="d-flex justify-end">
+                    <NavUpper OnToggleDarkMode="ToggleDarkMode" />
+                </MudAppBar>
+                <MudDrawer Open="true" ClipMode="DrawerClipMode.Always" Elevation="2">
+                    <NavMenu />
+                </MudDrawer>
+                <div class="pa-4">
+                    <MudMainContent>
+                        @Body
+                    </MudMainContent>
+                </div>
+            </Authorized>
+
+            <NotAuthorized>
+                <Logout />
+            </NotAuthorized>
+        </AuthorizeView>
+    </MudLayout>
+}

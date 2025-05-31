@@ -1,0 +1,47 @@
+@* <MudDrawerHeader>
+    <div class="d-flex align-center gap-2">
+        <MudImage Src="img/accelerate.svg" Width="30"/>
+        <MudText Typo="Typo.h5">Application</MudText>
+    </div>
+</MudDrawerHeader> *@
+
+<div class="mt-2">
+    <MudNavMenu Color="Color.Primary" Bordered="true" Margin="Margin.Dense" Class="mud-width-full gap-1">
+        <MudText Class="mt-4 ml-4 mb-1" Style="font-size: 12px;">Overview</MudText>
+        <MudNavLink Match="NavLinkMatch.All"
+                    Href="/"
+                    Icon="@Icons.Material.Outlined.Dashboard">
+            Dashboard
+        </MudNavLink>
+
+        <MudNavLink Match="NavLinkMatch.All"
+                    Href="/requests"
+                    Icon="@Icons.Material.Outlined.Checklist">
+            Requests
+        </MudNavLink>
+
+        <MudNavLink Match="NavLinkMatch.All"
+                    Href="/roadmap"
+                    Icon="@Icons.Material.Outlined.InsertChart">
+            Roadmap
+        </MudNavLink>
+
+        <MudText Class="mt-4 ml-4 mb-1" Style="font-size: 12px;">Interaction</MudText>
+
+        <MudNavLink Match="NavLinkMatch.Prefix"
+                    Href="/comments"
+                    Icon="@Icons.Material.Outlined.ModeComment">
+            Comments
+        </MudNavLink>
+        <MudNavLink Match="NavLinkMatch.Prefix"
+                    Href="/voting"
+                    Icon="@Icons.Material.Outlined.Gavel">
+            Voting
+        </MudNavLink>
+        <MudNavLink Match="NavLinkMatch.Prefix"
+                    Href="/notification"
+                    Icon="@Icons.Material.Outlined.Notifications">
+            Notifications
+        </MudNavLink>
+    </MudNavMenu>
+</div>

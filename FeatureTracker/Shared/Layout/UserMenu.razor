@@ -1,0 +1,42 @@
+﻿@inherits UserMenuBase
+
+<MudMenu AnchorOrigin="Origin.BottomCenter" Dense="true" DropShadow="true">
+    <ActivatorContent>
+        <MudAvatar Rounded="true" Style="border-radius: 10px;" Elevation="2">
+            <MudImage Src="img/person.png"/>
+        </MudAvatar>
+    </ActivatorContent>
+    <ChildContent>
+        <MudContainer Class="py-4 px-4" Style="display: flex; gap: 12px;">
+            <MudAvatar Rounded="true" Style="border-radius: 10px; box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;">
+                <MudImage Src="img/person.png"/>
+            </MudAvatar>
+            <div>
+                <MudText Typo="Typo.body2" Style="font-weight: bold;">John Doe</MudText>
+                <MudText Style="font-size: 10px; color: #787878;">johndoe@mail.com</MudText>
+            </div>
+
+
+        </MudContainer>
+
+        <MudDivider DividerType="DividerType.Middle" Class="my-2" Style="border-color: #505050;"/>
+
+        <MudMenuItem Icon="@Icons.Material.Outlined.Person" IconSize="Size.Small"
+                     OnClick="@(() => RedirectRoute("/user-profile/account"))">Account
+        </MudMenuItem>
+        <MudMenuItem OnClick="ToggleDarkMode" AutoClose="false" Icon="@DarkModeIcon"
+                     IconSize="Size.Small">@DarkModeTooltip</MudMenuItem>
+        <MudMenuItem Icon="@Icons.Material.Outlined.SupportAgent" IconSize="Size.Small"
+                     OnClick="@(() => RedirectRoute("/support"))">Support
+        </MudMenuItem>
+
+
+        <MudDivider DividerType="DividerType.Middle" Class="my-2" Style="border-color: #505050;"/>
+
+        <MudMenuItem Icon="@Icons.Material.Outlined.Settings" IconSize="Size.Small"
+                     OnClick="@(() => RedirectRoute("/user-profile/account/settings"))">Settings
+        </MudMenuItem>
+        <MudMenuItem Icon="@Icons.Material.Outlined.Logout" IconSize="Size.Small" OnClick="Logout">Sign Out</MudMenuItem>
+        <div style="padding-bottom: 16px;"></div>
+    </ChildContent>
+</MudMenu>

@@ -1,0 +1,19 @@
+@inherits DashCardChartBase
+
+<MudCard>
+    <MudCardHeader>
+        <MudGrid>
+            <MudItem >
+                <MudText Typo="Typo.h5">@Title</MudText>
+                <MudText Style="color: #828282;">@Description</MudText>
+            </MudItem>
+        </MudGrid>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid>
+            <MudItem>
+                <MudChart ChartType="@ChartType"></MudChart>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

@@ -1,0 +1,94 @@
+@page "/login"
+@layout LoginLayout
+@inherits LoginBase
+
+<MudGrid class="d-flex flex-column justify-center">
+    <MudItem Class="d-flex align-center justify-center">
+        <MudPaper Class="pa-6" Elevation="4">
+            <MudForm @ref="_form" @bind-IsValid="@_isValid">
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex flex-column" style="min-width: 380px">
+                        <MudText Typo="Typo.h5" Class="mb-2" style="font-weight: bold">Sign in</MudText>
+                        <MudText Typo="Typo.subtitle2" Class="mb-4" style="color: #828282;">Enter your email and password to access your account</MudText>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Email</MudText>
+                        <MudTextField @bind-Value="_userAuth.Email"
+                                      Placeholder="name@company.com"
+                                      Required="true"
+                                      RequiredError="Email is Required"
+                                      Variant="Variant.Outlined"
+                                      OnKeyUp="ValidateEmail"
+                                      Immediate="true"
+                                      Error="@ErrorValidateEmail"
+                                      ErrorText="@MessageValidateEmail"/>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-space-between">
+                            <MudText Typo="Typo.body2" style="font-weight: bold">Password</MudText>
+                            <MudLink Href="#">Forgot your password?</MudLink>
+                        </div>
+                        <MudTextField @bind-Value="_userAuth.Password"
+                                      Placeholder="******"
+                                      Required="true"
+                                      RequiredError="Password is Required"
+                                      InputType="@_passwordInput"
+                                      Variant="Variant.Outlined"
+                                      Adornment="Adornment.End"
+                                      Immediate
+                                      AdornmentIcon="@_passwordInputIcon"
+                                      OnAdornmentClick="TogglePasswordVisibility"
+                                      OnKeyUp="(args) => EnterPressed(args)"/>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudCheckBox @bind-Value="_userAuth.RememberMe" Label="Remember-me?" Dense Size="Size.Small" />
+                        @* <MudCheckBox T="bool" Label="Remember me for 30 days" Dense Size="Size.Small"></MudCheckBox> *@
+                    </div>
+
+                    <div class="d-flex flex-column">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   FullWidth="true"
+                                   Class="my-3"
+                                   OnClick="HandleLogin"
+                                   Disabled="@(!_isValid)">
+                            Sign In
+                        </MudButton>
+                    </div>
+
+                    <div class="d-flex flex-column">
+                        <MudText Typo="Typo.caption" Align="Align.Center" Class="mt-4">
+                            Don't have an account?
+                            <MudLink Href="#"> Contact your administrator</MudLink>
+                        </MudText>
+                    </div>
+                </div>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+<style>
+    .mud-link.mud-link-underline-hover {
+        color: white !important;
+        font-size: 12px;
+        text-decoration: none;
+    }
+
+    .mud-link.mud-link-underline-hover:hover {
+        font-weight: bold;
+    }
+
+    .mud-checkbox .mud-checkbox-dense {
+        padding: 0;
+        padding-right: 4px;
+    }
+
+    .mud-input-control label.mud-checkbox > p {
+        font-size: 14px;
+    }
+</style>

@@ -1,0 +1,17 @@
+@page "/error"
+@inherits ComponentBase
+
+<div class="d-flex justify-center">
+    <div id="animation-container" style="width: 400px; height: 400px;">
+        <script>
+            var animation = bodymovin.loadAnimation({
+                container: document.getElementById('animation-container'),
+                path: '/json/404notfound.json',
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                name: "Demo Animation",
+            });
+        </script>
+    </div>
+</div>

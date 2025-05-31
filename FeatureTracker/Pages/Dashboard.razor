@@ -1,0 +1,199 @@
+@page "/"
+@page "/dashboard"
+@layout MainLayout
+@attribute [Authorize]
+
+<AuthorizeView>
+    <NotAuthorized>
+        <Logout />
+    </NotAuthorized>
+</AuthorizeView>
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="ml-10 mr-10">
+    <MudGrid Justify="Justify.FlexStart" Class="pa-4" Spacing="3">
+        <MudItem>
+            <div class="d-flex flex-column">
+                <MudText Typo="Typo.h2">
+                    Feature Improvement Dashboard
+                </MudText>
+
+                <MudText Style="color: #828282;">
+                    Track the status of your requested improvements and see what's coming next.
+                </MudText>
+            </div>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Justify="Justify.FlexStart" Class="pa-4" Spacing="3">
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <DashCard Title="Total Requests"
+                      Description="58"
+                      SecondaryIcon="@Icons.Material.Outlined.TrendingUp"
+                      SecondaryColor="Color.Success"
+                      SecondaryDescription="+12%"
+                      SecondarySubDescription="from last month"
+                      PrincipalIcon="@Icons.Material.Outlined.ArrowOutward" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <DashCard Title="In Development"
+                      Description="14"
+                      SecondaryIcon="@Icons.Material.Outlined.TrendingUp"
+                      SecondaryColor="Color.Success"
+                      SecondaryDescription="+4%"
+                      SecondarySubDescription="from last week"
+                      PrincipalIcon="@Icons.Material.Outlined.ArrowRightAlt" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <DashCard Title="Your Requests"
+                      Description="6"
+                      SecondaryDescription="2"
+                      SecondarySubDescription="completed recently"
+                      PrincipalIcon="@Icons.Material.Outlined.ArrowOutward" />
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <DashCard Title="Avg. Completion"
+                      Description="14 days"
+                      SecondaryIcon="@Icons.Material.Outlined.TrendingDown"
+                      SecondaryColor="Color.Error"
+                      SecondaryDescription="-2 days"
+                      SecondarySubDescription="from last quarter"
+                      PrincipalIcon="@Icons.Material.Outlined.AccessTime" />
+        </MudItem>
+
+        @* Add some charts w/ choice of user 
+         <MudGrid>
+            <MudItem xs="12" sm="12" md="12" lg="6">
+                <DashCardChart Title="Request Status Distribution"
+                               Description="Current distribution of feature requests by status"
+                               ChartType="ChartType.Pie" />
+            </MudItem>
+            <MudItem xs="12" sm="12" md="12" lg="6">
+                <DashCardChart />
+            </MudItem>
+        </MudGrid> *@
+    </MudGrid>
+
+    <MudGrid Justify="Justify.FlexStart" Class="pa-4" Spacing="3">
+        <MudItem xs="12" sm="6" md="4" lg="7">
+            <MudCard Outlined="true" Style="width: 100%; height: 100%">
+                <MudCardHeader>
+                    <MudGrid Class="d-flex flex-row align-center justify-space-between">
+                        <MudItem>
+                            <div class="d-flex flex-row justify-center align-center">
+                                <div class="d-flex flex-column">
+                                    <MudText>
+                                        🔥 Recent Feature Requests
+                                    </MudText>
+                                    <MudText Style="color: #828282;">
+                                        Latest improvement requests from all clients
+                                    </MudText>
+                                </div>
+                            </div>
+                        </MudItem>
+                        <MudItem Class="d-flex gap-2">
+                            <MudButton Class="btn-hover" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add">New Request</MudButton>
+                            <MudButton Class="btn-hover" Variant="Variant.Outlined" EndIcon="@Icons.Material.Outlined.ArrowRightAlt">View All</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardHeader>
+                <MudCardContent Class="d-flex flex-column gap-2">
+                    <DashCardList Title="Enhanced Reporting Dashboard"
+                                  IconTitle="📊"
+                                  Observation="Add more visualization options and export capabilities to the reporting dashboard"
+                                  Status="In Development"
+                                  DeliveryDate="2023-11-30"
+                                  VoteCounting="24" />
+
+                    <DashCardList Title="Bulk User Import"
+                                  IconTitle="📥"
+                                  Observation="Allow administrators to import multiple users at once via CSV"
+                                  Status="Under Review"
+                                  DeliveryDate="2023-12-15"
+                                  VoteCounting="18" />
+
+                    <DashCardList Title="Mobile App Notifications"
+                                  IconTitle="📱"
+                                  Observation="Push notifications for important events in the mobile application"
+                                  Status="In Testing"
+                                  DeliveryDate="2023-11-10"
+                                  VoteCounting="32" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="4" lg="5">
+            <MudCard Outlined="true" Style="width: 100%; height: 100%">
+                <MudCardHeader>
+                    <MudGrid Class="d-flex flex-row align-center justify-space-between">
+                        <MudItem>
+                            <div class="d-flex flex-row justify-center align-center">
+                                <div class="d-flex flex-column">
+                                    <MudText>
+                                        🚀 Public Roadmap
+                                    </MudText>
+                                    <MudText Style="color: #828282;">
+                                        Upcoming feature improvements
+                                    </MudText>
+                                </div>
+                            </div>
+                        </MudItem>
+                        <MudItem>
+                            <MudButton Variant="Variant.Outlined"
+                                       EndIcon="@Icons.Material.Outlined.ArrowRightAlt"
+                                       Class="btn-hover">
+                                View Full Roadmap
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardHeader>
+                <MudCardContent>
+                    <DashSimpleCardList Title="Enhanced Reporting Dashboard"
+                                        IconTitle="📊"
+                                        DeliveryDate="November 2023"
+                                        Status="In Development" />
+
+                    <DashSimpleCardList Title="Mobile App Notifications"
+                                        IconTitle="📱"
+                                        DeliveryDate="November 2023"
+                                        Status="In Testing" />
+
+                    <DashSimpleCardList Title="API Integration with Third-Party Tools"
+                                        IconTitle="🔌"
+                                        DeliveryDate="December 2023"
+                                        Status="In Development" />
+
+                    <DashSimpleCardList Title="Bulk User Import"
+                                        IconTitle="📥"
+                                        DeliveryDate="December 2023"
+                                        Status="Planned" />
+
+                    <DashSimpleCardList Title="Advanced Search Filters"
+                                        IconTitle="🔍"
+                                        DeliveryDate="January 2024"
+                                        Status="Planned" />
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</div>
+
+<style>
+    .card-dash:hover {
+        background-color: #ffffff04;
+    }
+
+    .card-button-dash > a {
+        padding: 0 !important;
+        text-decoration: none;
+        display: block;
+    }
+
+        .card-button-dash > a > .mud-nav-link-text {
+            margin: 0;
+        }
+</style>
