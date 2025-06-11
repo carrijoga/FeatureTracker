@@ -22,33 +22,56 @@ public sealed class PasswordHasher : IPasswordHasher
 
     public (string hash, string salt, int iterations) HashPassword(string password)
     {
-        var salt = RandomNumberGenerator.GetBytes(_settings.SaltSize);
-        var hash = Rfc2898DeriveBytes.Pbkdf2(
-            password: password + _settings.Pepper,
-            salt: salt,
+        var saltBytes = RandomNumberGenerator.GetBytes(_settings.SaltSize);
+        var combined = CombinePasswordAndPepper(password, _settings.Pepper);
+        var hashBytes = Rfc2898DeriveBytes.Pbkdf2(
+            password: combined,
+            salt: saltBytes,
             iterations: _settings.Iterations,
             hashAlgorithm: _algorithm,
             outputLength: _settings.HashSize);
 
-        return (
-            hash: Convert.ToBase64String(hash),
-            salt: Convert.ToBase64String(salt),
-            iterations:_settings.Iterations);
+        var salt = Convert.ToBase64String(saltBytes);
+        var hash = Convert.ToBase64String(hashBytes);
+
+        CryptographicOperations.ZeroMemory(saltBytes);
+        CryptographicOperations.ZeroMemory(hashBytes);
+
+        return (hash, salt, iterations: _settings.Iterations);
     }
 
     public bool Verify(string password, string passwordHash, string passwordSalt, int passwordIterations)
     {
         var salt = Convert.FromBase64String(passwordSalt);
+        var combined = CombinePasswordAndPepper(password, _settings.Pepper);
         var expectedHash = Convert.FromBase64String(passwordHash);
 
         var computedHash = Rfc2898DeriveBytes.Pbkdf2(
-            password: password + _settings.Pepper,
+            password: combined,
             salt: salt,
-            iterations: _settings.Iterations,
+            iterations: passwordIterations,
             hashAlgorithm: _algorithm,
             outputLength: _settings.HashSize);
 
         return CryptographicOperations.FixedTimeEquals(expectedHash, computedHash);
+    }
+
+    public static byte[] CombinePasswordAndPepper(string password, string pepper)
+    {
+        if (string.IsNullOrEmpty(password))
+            throw new ArgumentNullException(nameof(password));
+
+        if (string.IsNullOrEmpty(pepper))
+            throw new ArgumentNullException(nameof(pepper));
+
+        var passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
+        var pepperBytes = System.Text.Encoding.UTF8.GetBytes(pepper);
+
+        var combined = new byte[passwordBytes.Length + pepperBytes.Length];
+        Buffer.BlockCopy(passwordBytes, 0, combined, 0, passwordBytes.Length);
+        Buffer.BlockCopy(pepperBytes, 0, combined, passwordBytes.Length, pepperBytes.Length);
+
+        return combined;
     }
 
     #endregion
