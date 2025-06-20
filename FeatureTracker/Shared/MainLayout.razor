@@ -19,9 +19,9 @@ else
 
             <Authorized>
                 <MudAppBar ToolBarClass="d-flex justify-space-between" Color="Color.Secondary" Elevation="1" Class="d-flex justify-end">
-                    <NavUpper OnToggleDarkMode="ToggleDarkMode" />
+                    <NavUpper OnToggleMenuBar="ToggleMenuBar" OnToggleDarkMode="ToggleDarkMode" />
                 </MudAppBar>
-                <MudDrawer Open="true" ClipMode="DrawerClipMode.Always" Elevation="2">
+                <MudDrawer Open="_isOpen" ClipMode="DrawerClipMode.Docked" Elevation="2">
                     <NavMenu />
                 </MudDrawer>
                 <div class="pa-4">
