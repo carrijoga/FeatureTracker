@@ -1,0 +1,6 @@
+services:
+  featuretracker.server:
+    image: ${DOCKER_REGISTRY-}featuretrackerserver
+    build:
+      context: .
+      dockerfile: FeatureTracker.Server/Dockerfile

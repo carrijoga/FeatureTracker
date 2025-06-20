@@ -9,30 +9,31 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using ApplicationException = FeatureTracker.Shared.Security.ApplicationException;
-using System.Collections.Concurrent;
+using FeatureTracker.Application.Services.LoginAttempt;
 
 namespace FeatureTracker.Application.Authentication;
 
 public class AuthApplication
 {
+    #region Dependencies
+    private readonly Context _context;
+    private readonly IConfiguration _configuration;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly ILoginAttemptService _loginAttemptService;
+    #endregion
+
     #region Constructor
 
-    public AuthApplication(Context context, IConfiguration configuration, IPasswordHasher passwordHasher)
+    public AuthApplication(Context context,
+                           IConfiguration configuration,
+                           IPasswordHasher passwordHasher,
+                           ILoginAttemptService loginAttemptService)
     {
         _context = context;
         _configuration = configuration;
         _passwordHasher = passwordHasher;
+        _loginAttemptService = loginAttemptService;
     }
-
-    #endregion
-
-    #region Properties
-
-    private readonly Context _context;
-    private readonly IConfiguration _configuration;
-    private readonly IPasswordHasher _passwordHasher;
-    private static readonly ConcurrentDictionary<string, int> _loginAttempts = new();
-    private const int MaxLoginAttempts = 5;
 
     #endregion
 
@@ -40,12 +41,12 @@ public class AuthApplication
 
     public async Task<UserLoginViewModel> LoginAsync(string? email, string? username, string password)
     {
-        var userKey = email ?? username ?? string.Empty;
+        var userKey = (email ?? username ?? string.Empty).ToLower();
 
         if (string.IsNullOrWhiteSpace(userKey))
             throw new ApplicationException("Email or username is required, try again!", StatusCodes.Status400BadRequest);
 
-        if (_loginAttempts.TryGetValue(userKey, out int attempts) && attempts >= MaxLoginAttempts)
+        if (await _loginAttemptService.IsLockedOutAsync(userKey, 5))
             throw new ApplicationException("Too many failed login attempts. Please try again later.", StatusCodes.Status429TooManyRequests);
 
         var user = await _context.Users
@@ -55,17 +56,17 @@ public class AuthApplication
 
         if (user is null)
         {
-            _loginAttempts.AddOrUpdate(userKey, 1, (key, val) => val + 1);
+            await _loginAttemptService.IncrementAsync(userKey);
             throw new ApplicationException("User not found, try again!", StatusCodes.Status404NotFound);
         }
 
         if (!user.VerifyPassword(password, _passwordHasher))
         {
-            _loginAttempts.AddOrUpdate(userKey, 1, (key, val) => val + 1);
+            await _loginAttemptService.IncrementAsync(userKey);
             throw new ApplicationException("Invalid password, try again!", StatusCodes.Status401Unauthorized);
         }
 
-        _loginAttempts.TryRemove(userKey, out _);
+        await _loginAttemptService.ResetAsync(userKey);
         var expires = DateTime.UtcNow.AddDays(1).Date;
 
         return new UserLoginViewModel
