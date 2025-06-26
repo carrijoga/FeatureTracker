@@ -37,8 +37,11 @@ public class AuthenticationService : AuthenticationStateProvider, IAuthenticatio
     {
         var token = await _js.GetFromLocalStorage(authToken);
 
-        if (string.IsNullOrEmpty(token))
+        if (string.IsNullOrEmpty(token) || IsTokenExpired(token))
+        {
+            await Logout();
             return NotAuthenticate;
+        }
 
         return await AuthenticateUser(token);
     }
@@ -89,6 +92,43 @@ public class AuthenticationService : AuthenticationStateProvider, IAuthenticatio
             case 3: base64 += "="; break;
         }
         return Convert.FromBase64String(base64);
+    }
+
+    private bool IsTokenExpired(string token)
+    {
+        var payload = token.Split('.')[1];
+        var jsonBytes = ParseBase64WithoutPadding(payload);
+        var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+
+        if (keyValuePairs.TryGetValue("exp", out var expValue))
+        {
+            long exp;
+            if (expValue is JsonElement jsonElement)
+            {
+                if (jsonElement.ValueKind == JsonValueKind.Number && jsonElement.TryGetInt64(out exp))
+                {
+                    var expDate = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+                    return expDate < DateTime.UtcNow;
+                }
+                else if (jsonElement.ValueKind == JsonValueKind.String && long.TryParse(jsonElement.GetString(), out exp))
+                {
+                    var expDate = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+                    return expDate < DateTime.UtcNow;
+                }
+            }
+            else if (expValue is long l)
+            {
+                exp = l;
+                var expDate = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+                return expDate < DateTime.UtcNow;
+            }
+            else if (expValue is string s && long.TryParse(s, out exp))
+            {
+                var expDate = DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+                return expDate < DateTime.UtcNow;
+            }
+        }
+        return true; // Se não encontrar o campo exp, considera expirado
     }
 
     public async Task<UserAuthInfo> Login(UserAuth userAuth)

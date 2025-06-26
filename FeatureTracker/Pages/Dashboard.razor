@@ -15,7 +15,7 @@
     <MudGrid Justify="Justify.FlexStart" Class="pa-4" Spacing="3">
         <MudItem>
             <div class="d-flex flex-column">
-                <MudText Typo="Typo.h2">
+                <MudText Typo="Typo.h3" Style="font-weight: inherit">
                     Feature Improvement Dashboard
                 </MudText>
 
@@ -145,13 +145,14 @@
                         <MudItem>
                             <MudButton Variant="Variant.Outlined"
                                        EndIcon="@Icons.Material.Outlined.ArrowRightAlt"
-                                       Class="btn-hover">
+                                       Class="btn-hover"
+                                       style="text-transform: none;">
                                 View Full Roadmap
                             </MudButton>
                         </MudItem>
                     </MudGrid>
                 </MudCardHeader>
-                <MudCardContent>
+                <MudCardContent Class="d-flex flex-column gap-2">
                     <DashSimpleCardList Title="Enhanced Reporting Dashboard"
                                         IconTitle="📊"
                                         DeliveryDate="November 2023"
@@ -193,7 +194,7 @@
         display: block;
     }
 
-        .card-button-dash > a > .mud-nav-link-text {
-            margin: 0;
-        }
+    .card-button-dash > a > .mud-nav-link-text {
+        margin: 0;
+    }
 </style>

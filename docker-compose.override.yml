@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  featuretracker.server:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__SqlServer=Server=sqlserver;DataBase=FeatureTracker;User=sa;Password=~RWu8~Ao%rw%90BC;TrustServerCertificate=True;MultipleActiveResultSets=True;
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - SA_PASSWORD=~RWu8~Ao%rw%90BC
+      - ACCEPT_EULA=Y
+      - MinProtocol=TLSv1
+      - CipherString=DEFAULT@SECLEVEL=1
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+volumes:
+  redis-data:
+    name: redisdata
+  sqlserver-data:
+    name: sqlserverdata
