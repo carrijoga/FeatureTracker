@@ -1,25 +1,30 @@
-using System.Security.Authentication;
+using FeatureTracker.Application.Companies;
+using FeatureTracker.Application.Parameters.Email;
+using FeatureTracker.Application.Services.LoginAttempt;
+using FeatureTracker.Application.Users;
+using FeatureTracker.Domain.Model.Companies;
 using FeatureTracker.Domain.Model.Users;
 using FeatureTracker.Domain.Security;
 using FeatureTracker.Domain.View.Email.Users;
 using FeatureTracker.Infrastructure;
 using FeatureTracker.Shared.ViewModel;
-using FeatureTracker.Application.Parameters.Email;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
+using System.Security.Authentication;
 using ApplicationException = FeatureTracker.Shared.Security.ApplicationException;
-using FeatureTracker.Application.Services.LoginAttempt;
 
 namespace FeatureTracker.Application.Authentication;
 
-public class AuthApplication
+public class AuthApplication : BaseApplication
 {
     #region Dependencies
-    private readonly Context _context;
     private readonly IConfiguration _configuration;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ILoginAttemptService _loginAttemptService;
+    private readonly CompanyApplication _companyApplication;
+    private readonly UserApplication _userApplication;
+    private readonly EmailSenderApplication _emailSenderApplication;
     #endregion
 
     #region Constructor
@@ -27,17 +32,40 @@ public class AuthApplication
     public AuthApplication(Context context,
                            IConfiguration configuration,
                            IPasswordHasher passwordHasher,
-                           ILoginAttemptService loginAttemptService)
+                           ILoginAttemptService loginAttemptService,
+                           CompanyApplication companyApplication,
+                           UserApplication userApplication,
+                           EmailSenderApplication emailSenderApplication
+    ) : base(context)
     {
-        _context = context;
         _configuration = configuration;
         _passwordHasher = passwordHasher;
         _loginAttemptService = loginAttemptService;
+        _companyApplication = companyApplication;
+        _userApplication = userApplication;
+        _emailSenderApplication = emailSenderApplication;
     }
-
     #endregion
 
     #region Methods
+    public async Task<bool> PreRegisterUserAsync(string email, string creatorId)
+    {
+        var (exists, message) = await _userApplication.VerifyEmailInvitationAsync(email);
+
+        if (!exists)
+        {
+            var InviteToken = await _userApplication.GenerateUserInvitation(email, creatorId);
+            var subject = "Convite para criar sua conta no FeatureTracker";
+
+            await _emailSenderApplication.SendEmail(email,
+                                                    subject,
+                                                    new UserInvite().GetMessageEmail(InviteToken.Item2, InviteToken.Item1));
+
+            return true;
+        }
+        else
+            throw new AuthenticationException(message);
+    }
 
     public async Task<UserLoginViewModel> LoginAsync(string? email, string? username, string password)
     {
@@ -49,10 +77,7 @@ public class AuthApplication
         if (await _loginAttemptService.IsLockedOutAsync(userKey, 5))
             throw new ApplicationException("Too many failed login attempts. Please try again later.", StatusCodes.Status429TooManyRequests);
 
-        var user = await _context.Users
-            .Include(x => x.Person)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Email == email || x.Username == username);
+        var user = await _userApplication.GetUserByEmailOrUserNameAsync(userKey);
 
         if (user is null)
         {
@@ -84,14 +109,75 @@ public class AuthApplication
 
         await userRegisterInfo.IsValid();
 
-        if (await _context.Users.AnyAsync(x => x.Email == userRegisterInfo.Email
-                                                 || x.Username == userRegisterInfo.Username))
+        var userKey = (userRegisterInfo.Email ?? userRegisterInfo.Username ?? string.Empty).ToLower();
+
+        if (await _userApplication.VerifyExistingUserByEmailOrUsername(userKey))
             throw new AuthenticationException("User already exists");
 
-        _context.Users.Add(new User().CreateNewUser(userRegisterInfo, _passwordHasher));
+        _context.Users.Add(new User().CreateNewUser(userRegisterInfo, new Company(), _passwordHasher));
+
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<bool> RegisterNewAsync(UserRegisterViewModel userRegisterInfo)
+    {
+        ArgumentNullException.ThrowIfNull(userRegisterInfo);
+
+        await userRegisterInfo.IsValid();
+
+        var userKey = (userRegisterInfo.Email ?? userRegisterInfo.Username ?? string.Empty).ToLower();
+
+        if (await _userApplication.VerifyExistingUserByEmailOrUsername(userKey))
+            throw new AuthenticationException("User already exists");
+
+        Guid.TryParse(userRegisterInfo.TokenCompany, out Guid creatorGuid);
+
+        if (await _companyApplication.CheckCompanyTokenAsync(creatorGuid))
+        {
+            var company = await _companyApplication.ValidCompanyByTokenAsync(creatorGuid);
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                _context.Users.Add(new User().CreateNewUser(userRegisterInfo, company, _passwordHasher));
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(ex.Message);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public async Task<UserRegisterViewModel> ValidateTokenAsync(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            throw new ArgumentNullException(nameof(token), "Token cannot be null or empty.");
+
+        if (!Guid.TryParse(token, out Guid tokenGuid))
+            throw new ArgumentException("Invalid token format. It must be a valid GUID.", nameof(token));
+
+        var userInvite = await _context.UserInvite
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Token == tokenGuid && !x.IsUsed && x.ExpirationDate > DateTime.Now);
+
+        if (userInvite is null)
+            throw new AuthenticationException("Invalid or expired invitation token.");
+
+        return new UserRegisterViewModel
+        {
+            Email = userInvite.Email,
+            TokenCompany = userInvite.Token.ToString()
+        };
     }
 
     public async Task<bool> RecoverPasswordAsync(string email)

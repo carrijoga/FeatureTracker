@@ -15,6 +15,7 @@ public class UserRegisterViewModel
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }
     public bool AcceptTerms { get; set; }
+    public string TokenCompany { get; set; }
 
     #endregion
 

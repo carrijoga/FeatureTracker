@@ -61,8 +61,8 @@ public sealed class PasswordHasher : IPasswordHasher
         if (string.IsNullOrEmpty(password))
             throw new ArgumentNullException(nameof(password));
 
-        if (string.IsNullOrEmpty(pepper))
-            throw new ArgumentNullException(nameof(pepper));
+        //if (string.IsNullOrEmpty(pepper))
+        //    throw new ArgumentNullException(nameof(pepper));
 
         var passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
         var pepperBytes = System.Text.Encoding.UTF8.GetBytes(pepper);

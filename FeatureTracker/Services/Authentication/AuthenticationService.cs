@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using FeatureTracker.Client.Utils;
 using FeatureTracker.Shared.Account;
+using FeatureTracker.Shared.ViewModel;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using static System.Net.WebRequestMethods;
@@ -174,6 +175,21 @@ public class AuthenticationService : AuthenticationStateProvider, IAuthenticatio
         }
     }
 
+    public async Task<UserRegisterViewModel> ValidateTokenAsync(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            throw new ArgumentException("Token is required", nameof(token));
+
+        var httpResponse = await httpClient.GetAsync($"api/v1/Auth/ValidateToken?token={token}");
+
+        if (Equals(httpResponse.StatusCode, HttpStatusCode.OK))
+            return await httpResponse.Content.ReadFromJsonAsync<UserRegisterViewModel>();
+        else
+        {
+            var msgError = await httpResponse.Content.ReadAsStringAsync();
+            throw new Exception(msgError);
+        }
+    }
     public async Task Logout()
     {
         await _js.RemoveItem(authToken);

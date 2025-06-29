@@ -19,6 +19,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName(nameof(User.PersonId))
             .IsRequired();
 
+        builder.Property(x => x.CompanyId)
+            .HasColumnName(nameof(User.CompanyId))
+            .IsRequired();
 
         builder.Property(x => x.Email)
             .HasColumnName(nameof(User.Email))
@@ -57,6 +60,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasOne(x => x.Person)
             .WithMany()
             .HasForeignKey(x => x.PersonId);
+
+        //builder.HasOne(x => x.Company)
+        //    .WithOne()
+        //    .HasForeignKey<User>(x => x.CompanyId);
 
         builder.HasIndex(x => x.Email).IsUnique();
         builder.HasIndex(x => x.Username).IsUnique();

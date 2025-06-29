@@ -35,4 +35,8 @@
     <ProjectReference Include="..\FeatureTracker.Shared\FeatureTracker.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Requests\" />
+  </ItemGroup>
+
 </Project>
