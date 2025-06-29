@@ -1,57 +1,72 @@
+<!-- In README.md -->
+[Português 🇧🇷](README.pt-BR.md)
+
+---
+
 # FeatureTracker
 
-FeatureTracker é uma aplicação web moderna para gerenciamento e rastreamento de novas funcionalidades, desenvolvida com Blazor WebAssembly (.NET 9) e backend RESTful seguro. O sistema oferece autenticação JWT, integração com SQL Server, notificações em tempo real e uma interface avançada baseada em MudBlazor.
+FeatureTracker is a modern web application for managing and tracking new features, built with Blazor WebAssembly (.NET 9) and a secure RESTful backend. The system offers JWT authentication, SQL Server integration, real-time notifications, and a powerful UI based on MudBlazor.
 
-## Visão Geral
-- **Frontend:** Blazor WebAssembly (C#/.NET 9)
+### Overview
+
+- **Frontend:** Blazor WebAssembly (.NET 9, C#)
 - **Backend:** ASP.NET Core RESTful API
-- **UI:** MudBlazor
-- **Banco de Dados:** SQL Server
-- **Autenticação:** JWT (JSON Web Token)
-- **Documentação:** Swagger/OpenAPI e Scalar
-- **PWA:** Suporte offline via Service Worker
+- **UI Framework:** MudBlazor
+- **Database:** SQL Server
+- **Authentication:** JWT (JSON Web Token)
+- **Documentation:** Swagger/OpenAPI & Scalar
+- **PWA:** Offline support via Service Worker
 
-## Funcionalidades
-- Cadastro e autenticação de usuários (JWT)
-- Recuperação de senha por e-mail (MailKit)
-- Notificações em tempo real na interface
-- Gerenciamento de funcionalidades e roadmap
-- Integração com ferramentas de terceiros via API
-- Filtros avançados de busca
-- Interface responsiva e moderna
+### Features
 
-## Endpoints Principais
-### Autenticação
-- `POST /api/v1/Auth/Login` — Login de usuário, retorna token JWT
-- `POST /api/v1/Auth/Register` — Cadastro de novo usuário
+- User registration and authentication (JWT)
+- Password recovery via email (MailKit)
+- Real-time interface notifications
+- Feature and roadmap management
+- Third-party integrations via API
+- Advanced search and filtering
+- Modern, responsive UI
+- **AI-powered feature title suggestions** (GeminiService)
 
-### Outros Recursos
-- Notificações em tempo real
-- Recuperação de senha com link seguro (expira em 24h)
-- Documentação interativa: `/swagger` e `/scalar`
+### Main Endpoints
 
-## Códigos de Status
-- 200: Sucesso
-- 400: Requisição inválida
-- 401: Não autorizado
-- 403: Acesso negado
-- 404: Recurso não encontrado
-- 500: Erro interno do servidor
+#### Authentication
 
-## Segurança
-- Todas as requisições devem ser feitas via HTTPS
-- Tokens JWT expiram após período determinado
-- Dados sensíveis criptografados
-- Rate limiting para evitar abusos
+- `POST /api/v1/Auth/Login` — User login, returns JWT token
+- `POST /api/v1/Auth/Register` — Register new user
 
-## Como rodar localmente
-1. Clone o repositório
-2. Configure a string de conexão do SQL Server em `appsettings.json`
-3. Execute as migrações do Entity Framework (opcional)
-4. Rode o projeto via Visual Studio ou `dotnet run` na pasta `FeatureTracker.Server`
-5. Acesse `https://localhost:<porta>`
+#### Other Resources
 
-## Tecnologias Utilizadas
+- Real-time notifications
+- Secure password recovery link (expires in 24h)
+- Interactive documentation: `/swagger` and `/scalar`
+
+### Status Codes
+
+- **200**: Success
+- **400**: Bad request
+- **401**: Unauthorized
+- **403**: Forbidden
+- **404**: Not found
+- **500**: Internal server error
+
+### Security
+
+- All requests must use HTTPS
+- JWT tokens have configurable expiration
+- Sensitive data encrypted
+- Rate limiting to prevent abuse
+
+### Getting Started Locally
+
+1. Clone this repository
+2. Configure the SQL Server connection string in `appsettings.json`
+3. (Optional) Run Entity Framework migrations
+4. Start the project via Visual Studio or run `dotnet run` in the `FeatureTracker.Server` folder
+5. Access the app at `https://localhost:<port>`
+
+### Technologies Used
+
 - .NET 9 (Blazor WebAssembly, ASP.NET Core)
 - MudBlazor
 - SQL Server
@@ -59,6 +74,12 @@ FeatureTracker é uma aplicação web moderna para gerenciamento e rastreamento 
 - MailKit
 - Swagger/OpenAPI, Scalar
 
+### More Documentation
+
+See [ABOUT.md](ABOUT.md) for a detailed API overview, authentication flows, error handling, and advanced usage.
+
 ---
 
-> Desenvolvido com ❤️ por [Gabriel Carrijo](https://github.com/carrijoga)
+> Developed with ❤️ by [Gabriel Carrijo](https://github.com/carrijoga)
+
+---
