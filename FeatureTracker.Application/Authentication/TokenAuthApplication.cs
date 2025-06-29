@@ -77,7 +77,7 @@ public class TokenAuthApplication
         new(
         [
             new Claim(nameof(User.Username), user.Username),
-            new Claim(ClaimTypes.Name, user.Person.GetFullName()),
+            new Claim(ClaimTypes.Name, user.Email),
             new Claim(ClaimTypes.Sid, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:JwtIssuer"]!),

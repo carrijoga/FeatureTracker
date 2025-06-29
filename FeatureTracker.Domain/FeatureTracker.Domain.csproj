@@ -16,11 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ModelView\" />
-    <Folder Include="Model\Requests\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FeatureTracker.Shared\FeatureTracker.Shared.csproj" />
   </ItemGroup>
 </Project>

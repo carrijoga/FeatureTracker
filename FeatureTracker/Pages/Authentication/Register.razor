@@ -1,0 +1,124 @@
+@page "/register"
+@layout RegisterLayout
+@inherits RegisterBase
+
+<MudGrid class="d-flex flex-column justify-center">
+    <MudItem Class="d-flex align-center justify-center">
+        <MudPaper Class="pa-6" Elevation="4">
+            <MudForm @ref="_form" @bind-IsValid="@_isValid">
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex flex-column" style="min-width: 380px">
+                        <MudText Typo="Typo.h5" Class="mb-2" style="font-weight: bold">Finish your register</MudText>
+                        <MudText Typo="Typo.subtitle2" Class="mb-4" style="color: #828282;">Enter your informations and password to create your account</MudText>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">First Name</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.FirstName"
+                                      Placeholder="John"
+                                      Required="true"
+                                      RequiredError="First Name is Required"
+                                      Variant="Variant.Outlined"
+                                      Immediate="true" />
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Last Name</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.LastName"
+                                      Placeholder="Doe"
+                                      Required="true"
+                                      RequiredError="Last Name is Required"
+                                      Variant="Variant.Outlined"
+                                      Immediate="true" />
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Email</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.Email"
+                                      Placeholder="name@company.com"
+                                      Required="true"
+                                      RequiredError="Email is Required"
+                                      Variant="Variant.Outlined"
+                                      Immediate="true"
+                                      Disabled="true"/>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Username</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.Username"
+                                      Placeholder="johndoe"
+                                      Required="true"
+                                      RequiredError="Username is Required"
+                                      Variant="Variant.Outlined"
+                                      Immediate="true" />
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Phone Number</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.Phone"
+                                      Placeholder="(99) 99999-9999"
+                                      Variant="Variant.Outlined"
+                                      Immediate="true" />
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Date of Birth</MudText>
+                        <MudDatePicker @bind-Date="ViewModelRegister.BirthDay"
+                                       Placeholder="dd/MM/yyyy"
+                                       Variant="Variant.Outlined" />
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Password</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.Password"
+                                      Placeholder="******"
+                                      Required="true"
+                                      RequiredError="Password is Required"
+                                      InputType="@_passwordInput"
+                                      Variant="Variant.Outlined"
+                                      Adornment="Adornment.End"
+                                      Immediate="true"
+                                      AdornmentIcon="@_passwordInputIcon"
+                                      OnAdornmentClick="TogglePasswordVisibility"
+                                      OnKeyUp="(args) => EnterPressed(args)" />
+
+                        <MudText Typo="Typo.body2" style="font-weight: bold">Confirm your Password</MudText>
+                        <MudTextField @bind-Value="ViewModelRegister.ConfirmPassword"
+                                      Placeholder="******"
+                                      Required="true"
+                                      RequiredError="Password is Required"
+                                      InputType="@_passwordInput"
+                                      Variant="Variant.Outlined"
+                                      Adornment="Adornment.End"
+                                      Immediate
+                                      AdornmentIcon="@_passwordInputIcon"
+                                      OnAdornmentClick="TogglePasswordVisibility"
+                                      OnKeyUp="(args) => EnterPressed(args)" />
+                    </div>
+
+                    <div class="d-flex flex-column gap-2">
+                        <MudCheckBox @bind-Value="ViewModelRegister.AcceptTerms" Label="Accept the terms?" Dense Size="Size.Small" />
+                    </div>
+
+                    <div class="d-flex flex-column">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   FullWidth="true"
+                                   Class="my-3"
+                                   OnClick="HandleRegister"
+                                   Disabled="@(!_isValid)">
+                            Sign In
+                        </MudButton>
+                    </div>
+
+                    <div class="d-flex flex-column">
+                        <MudText Typo="Typo.caption" Align="Align.Center" Class="mt-4">
+                            Don't have an account?
+                            <MudLink Href="#"> Contact your administrator</MudLink>
+                        </MudText>
+                    </div>
+                </div>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
