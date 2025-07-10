@@ -49,14 +49,30 @@
                     </div>
 
                     <div class="d-flex flex-column">
-                        <MudButton Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   FullWidth="true"
-                                   Class="my-3"
-                                   OnClick="HandleLogin"
-                                   Disabled="@(!_isValid)">
-                            Sign In
-                        </MudButton>
+                        @if (_OnLoading)
+                        {
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       FullWidth="true"
+                                       Class="my-3"
+                                       Disabled="true">
+                                <div class="d-flex gap-2">
+                                    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                                    Sign In
+                                </div>
+                            </MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       FullWidth="true"
+                                       Class="my-3"
+                                       OnClick="HandleLogin"
+                                       Disabled="@(!_isValid)">
+                                Sign In
+                            </MudButton>
+                        }
                     </div>
 
                     <div class="d-flex flex-column">

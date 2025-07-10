@@ -1,4 +1,4 @@
-﻿@inherits UserMenuBase
+@inherits UserMenuBase
 
 <MudMenu AnchorOrigin="Origin.BottomCenter" Dense="true" DropShadow="true">
     <ActivatorContent>
@@ -27,7 +27,8 @@
         <MudMenuItem OnClick="ToggleDarkMode" AutoClose="false" Icon="@DarkModeIcon"
                      IconSize="Size.Small">@DarkModeTooltip</MudMenuItem>
         <MudMenuItem Icon="@Icons.Material.Outlined.SupportAgent" IconSize="Size.Small"
-                     OnClick="@(() => RedirectRoute("/support"))">Support
+                     OnClick="@(() => RedirectRoute("https://wa.me/55555555?text=Ol%C3%A1%21%20Tenho%20uma%20d%C3%BAvida%20sobre%20uma%20solicita%C3%A7%C3%A3o%20de%20melhoria.%20Poderia%20me%20ajudar%3F"))">
+            Support
         </MudMenuItem>
 
 

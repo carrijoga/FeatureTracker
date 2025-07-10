@@ -21,6 +21,7 @@ public class LoginBase : ComponentBase
     #region Properties
     protected MudForm _form;
     protected bool _isValid;
+    protected bool _OnLoading;
     protected UserAuth _userAuth = new();
     protected bool _passwordVisible;
     protected InputType _passwordInput = InputType.Password;
@@ -36,6 +37,8 @@ public class LoginBase : ComponentBase
 
     protected async Task HandleLogin()
     {
+        OnLoading(true);
+
         try
         {
             UserAuthInfo result = new();
@@ -49,7 +52,10 @@ public class LoginBase : ComponentBase
         catch (Exception ex)
         {
             Snackbar.Add(ex.Message, Severity.Error);
+            OnLoading(false);
         }
+
+        OnLoading(false);
     }
 
     protected async Task ValidateEmail()
@@ -104,5 +110,8 @@ public class LoginBase : ComponentBase
             _ = HandleLogin();
         }
     }
+
+    private void OnLoading(bool v) =>
+        _OnLoading = v;
     #endregion
 }
