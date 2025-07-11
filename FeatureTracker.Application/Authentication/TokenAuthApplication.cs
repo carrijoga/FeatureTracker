@@ -29,6 +29,8 @@ public class TokenAuthApplication
 
     public string GenerateToken(User user, DateTime expires)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = GenerateClaims(user),

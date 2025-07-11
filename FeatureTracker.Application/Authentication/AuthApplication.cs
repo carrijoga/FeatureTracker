@@ -69,38 +69,45 @@ public class AuthApplication : BaseApplication
 
     public async Task<UserLoginViewModel> LoginAsync(string? email, string? username, string password)
     {
-        var userKey = (email ?? username ?? string.Empty).ToLower();
-
-        if (string.IsNullOrWhiteSpace(userKey))
-            throw new ApplicationException("Email or username is required, try again!", StatusCodes.Status400BadRequest);
-
-        if (await _loginAttemptService.IsLockedOutAsync(userKey, 5))
-            throw new ApplicationException("Too many failed login attempts. Please try again later.", StatusCodes.Status429TooManyRequests);
-
-        var user = await _userApplication.GetUserByEmailOrUserNameAsync(userKey);
-
-        if (user is null)
+        try
         {
-            await _loginAttemptService.IncrementAsync(userKey);
-            throw new ApplicationException("User not found, try again!", StatusCodes.Status404NotFound);
+            var userKey = (email ?? username ?? string.Empty).ToLower();
+
+            if (string.IsNullOrWhiteSpace(userKey))
+                throw new ApplicationException("Email or username is required, try again!", StatusCodes.Status400BadRequest);
+
+            if (await _loginAttemptService.IsLockedOutAsync(userKey, 5))
+                throw new ApplicationException("Too many failed login attempts. Please try again later.", StatusCodes.Status429TooManyRequests);
+
+            var user = await _userApplication.GetUserByEmailOrUserNameAsync(userKey);
+
+            if (user is null)
+            {
+                await _loginAttemptService.IncrementAsync(userKey);
+                throw new ApplicationException("User not found, try again!", StatusCodes.Status404NotFound);
+            }
+
+            if (!user.VerifyPassword(password, _passwordHasher))
+            {
+                await _loginAttemptService.IncrementAsync(userKey);
+                throw new ApplicationException("Invalid password, try again!", StatusCodes.Status401Unauthorized);
+            }
+
+            await _loginAttemptService.ResetAsync(userKey);
+            var expires = DateTime.UtcNow.AddDays(1).Date;
+
+            return new UserLoginViewModel
+            {
+                Token = new TokenAuthApplication(_configuration).GenerateToken(user, expires),
+                RefreshToken = null, //Future implementation
+                Expires = expires,
+                Message = "Login successful"
+            };
         }
-
-        if (!user.VerifyPassword(password, _passwordHasher))
+        catch (Exception ex)
         {
-            await _loginAttemptService.IncrementAsync(userKey);
-            throw new ApplicationException("Invalid password, try again!", StatusCodes.Status401Unauthorized);
+            throw new ApplicationException($"An error occurred! {ex.Message}", StatusCodes.Status400BadRequest);
         }
-
-        await _loginAttemptService.ResetAsync(userKey);
-        var expires = DateTime.UtcNow.AddDays(1).Date;
-
-        return new UserLoginViewModel
-        {
-            Token = new TokenAuthApplication(_configuration).GenerateToken(user, expires),
-            RefreshToken = null, //Future implementation
-            Expires = expires,
-            Message = "Login successful"
-        };
     }
 
     public async Task<bool> RegisterAsync(UserRegisterViewModel userRegisterInfo)

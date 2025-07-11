@@ -2,6 +2,7 @@ using FeatureTracker.Shared.ViewModel;
 using FeatureTracker.Domain.Model.Persons;
 using FeatureTracker.Domain.Security;
 using FeatureTracker.Domain.Model.Companies;
+using FeatureTracker.Domain.Model.Profiles;
 
 namespace FeatureTracker.Domain.Model.Users;
 
@@ -22,6 +23,7 @@ public class User
     public int UserId { get; set; }
     public int PersonId { get; set; }
     public int CompanyId { get; set; }
+    //public int ProfileId { get; set; }
 
     public string Email { get; set; }
     public string Username { get; set; }
@@ -29,8 +31,10 @@ public class User
     public string PasswordSalt { get; set; }
     public int PasswordIterations { get; set; }
     public bool IsActive { get; set; }
+    //public bool IsAdmin { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    //public Profile Profile { get; set; }
     public Person? Person { get; set; }
     public Company Company { get; set; }
 
