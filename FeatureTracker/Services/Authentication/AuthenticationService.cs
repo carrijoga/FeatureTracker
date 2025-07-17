@@ -4,36 +4,30 @@ using System.Security.Claims;
 using System.Text.Json;
 using FeatureTracker.Client.Utils;
 using FeatureTracker.Shared.Account;
+using FeatureTracker.Shared.System;
 using FeatureTracker.Shared.ViewModel;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using static System.Net.WebRequestMethods;
 
 namespace FeatureTracker.Client.Services.Authentication;
 
 public class AuthenticationService : AuthenticationStateProvider, IAuthenticationService
 {
-    #region Properties
-
     private readonly IJSRuntime _js;
     public readonly HttpClient httpClient;
+    private readonly ClientParameters clientParameters;
     private const string authToken = nameof(authToken);
 
     private static AuthenticationState NotAuthenticate =>
         new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
-    #endregion
-
-    #region Constructor
-
-    public AuthenticationService(IJSRuntime js, HttpClient httpClient)
+    public AuthenticationService(IJSRuntime js, HttpClient httpClient, ClientParameters clientParameters)
     {
-        this._js = js;
+        _js = js;
         this.httpClient = httpClient;
+        this.clientParameters = clientParameters;
     }
-    #endregion
 
-    #region Methods
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var token = await _js.GetFromLocalStorage(authToken);
@@ -77,8 +71,6 @@ public class AuthenticationService : AuthenticationStateProvider, IAuthenticatio
 
             keyValuePairs.Remove(ClaimTypes.Role);
         }
-
-        //claims = MontarTelasRoles(claims);
 
         claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
 
@@ -140,22 +132,26 @@ public class AuthenticationService : AuthenticationStateProvider, IAuthenticatio
         {
             var userAuthInfo = await httpResponse.Content.ReadFromJsonAsync<UserAuthInfo>();
 
-            if (userAuthInfo is not null)
-            {
-                await _js.SetInLocalStorage(authToken, userAuthInfo.Token);
-                NotifyAuthenticationStateChanged(Task.FromResult(await AuthenticateUser(userAuthInfo.Token)));
+            if (userAuthInfo is null) return new UserAuthInfo();
+            await _js.SetInLocalStorage(authToken, userAuthInfo.Token!);
+            NotifyAuthenticationStateChanged(Task.FromResult(await AuthenticateUser(userAuthInfo.Token!)));
 
-                return userAuthInfo;
-            }
+            await SetClientParameters();
 
-            return new UserAuthInfo();
+            return userAuthInfo;
         }
-        else
-        {
-            var msgError = await httpResponse.Content.ReadAsStringAsync();
 
-            throw new Exception(msgError);
-        }
+        var msgError = await httpResponse.Content.ReadAsStringAsync();
+        throw new InvalidOperationException(msgError);
+    }
+
+    private async Task SetClientParameters()
+    {
+        var clientParameter = await (await httpClient.GetAsync("api/v1/Auth/GetClientParameters"))
+            .Content.ReadFromJsonAsync<ClientParameters>();
+
+        if (clientParameter is null) return;
+        clientParameters.SetAll(clientParameter);
     }
 
     public async Task<bool> Register(UserRegister userRegister)
@@ -197,5 +193,4 @@ public class AuthenticationService : AuthenticationStateProvider, IAuthenticatio
         httpClient.DefaultRequestHeaders.Authorization = null;
         NotifyAuthenticationStateChanged(Task.FromResult(NotAuthenticate));
     }
-    #endregion
 }

@@ -7,13 +7,14 @@
         </MudAvatar>
     </ActivatorContent>
     <ChildContent>
-        <MudContainer Class="py-4 px-4" Style="display: flex; gap: 12px;">
+        <MudContainer Class="pt-4 pb-2 px-4" Style="display: flex; gap: 12px;">
             <MudAvatar Rounded="true" Style="border-radius: 10px; box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;">
                 <MudImage Src="img/person.png"/>
             </MudAvatar>
             <div>
-                <MudText Typo="Typo.body2" Style="font-weight: bold;">John Doe</MudText>
-                <MudText Style="font-size: 10px; color: #787878;">johndoe@mail.com</MudText>
+                <MudText Color="Color.Default" Typo="Typo.body2" Style="font-weight: bold;">@clientParameters.PersonName</MudText>
+                @* <MudText Style="font-size: 10px; color: #787878;">@clientParameters.Email</MudText> *@
+                <MudText Style=@($"font-size: 10px; color: #787878;")>@clientParameters.ProfileName</MudText>
             </div>
 
 
@@ -21,12 +22,17 @@
 
         <MudDivider DividerType="DividerType.Middle" Class="my-2" Style="border-color: #505050;"/>
 
-        <MudMenuItem Icon="@Icons.Material.Outlined.Person" IconSize="Size.Small"
-                     OnClick="@(() => RedirectRoute("/user-profile/account"))">Account
+        <MudMenuItem Icon="@Icons.Material.Outlined.Person" IconSize="Size.Small" Class="py-1 px-3"
+                     OnClick="@(() => RedirectRoute("/user-profile/account"))">
+            Account
         </MudMenuItem>
-        <MudMenuItem OnClick="ToggleDarkMode" AutoClose="false" Icon="@DarkModeIcon"
-                     IconSize="Size.Small">@DarkModeTooltip</MudMenuItem>
-        <MudMenuItem Icon="@Icons.Material.Outlined.SupportAgent" IconSize="Size.Small"
+
+        <MudMenuItem OnClick="ToggleDarkMode" AutoClose="false" Icon="@DarkModeIcon" Class="py-1 px-3"
+                     IconSize="Size.Small">
+            @DarkModeTooltip
+        </MudMenuItem>
+
+        <MudMenuItem Icon="@Icons.Material.Outlined.SupportAgent" IconSize="Size.Small" Class="py-1 px-3"
                      OnClick="@(() => RedirectRoute("https://wa.me/55555555?text=Ol%C3%A1%21%20Tenho%20uma%20d%C3%BAvida%20sobre%20uma%20solicita%C3%A7%C3%A3o%20de%20melhoria.%20Poderia%20me%20ajudar%3F"))">
             Support
         </MudMenuItem>
@@ -34,10 +40,13 @@
 
         <MudDivider DividerType="DividerType.Middle" Class="my-2" Style="border-color: #505050;"/>
 
-        <MudMenuItem Icon="@Icons.Material.Outlined.Settings" IconSize="Size.Small"
-                     OnClick="@(() => RedirectRoute("/user-profile/account/settings"))">Settings
+        <MudMenuItem Icon="@Icons.Material.Outlined.Settings" IconSize="Size.Small" Class="py-1 px-3"
+                     OnClick="@(() => RedirectRoute("/user-profile/account/settings"))">
+            Settings
         </MudMenuItem>
-        <MudMenuItem Icon="@Icons.Material.Outlined.Logout" IconSize="Size.Small" OnClick="Logout">Sign Out</MudMenuItem>
+        <MudMenuItem Icon="@Icons.Material.Outlined.Logout" IconSize="Size.Small" Class="py-1 px-3" OnClick="Logout">
+            Sign Out
+        </MudMenuItem>
         <div style="padding-bottom: 16px;"></div>
     </ChildContent>
 </MudMenu>

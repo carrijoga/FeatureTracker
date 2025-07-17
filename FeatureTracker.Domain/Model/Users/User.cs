@@ -23,7 +23,7 @@ public class User
     public int UserId { get; set; }
     public int PersonId { get; set; }
     public int CompanyId { get; set; }
-    //public int ProfileId { get; set; }
+    public int ProfileId { get; set; }
 
     public string Email { get; set; }
     public string Username { get; set; }
@@ -31,10 +31,11 @@ public class User
     public string PasswordSalt { get; set; }
     public int PasswordIterations { get; set; }
     public bool IsActive { get; set; }
-    //public bool IsAdmin { get; set; }
+    public bool IsAdmin { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    //public Profile Profile { get; set; }
+
+    public Profile Profile { get; set; }
     public Person? Person { get; set; }
     public Company Company { get; set; }
 

@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
+using FeatureTracker.Shared.System;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace FeatureTracker.Client.Shared.Layout;
 
-public class UserMenuBase : ComponentBase
+public class UserMenuBase : ComponentBase, IDisposable
 {
     #region Inject
 
     [Inject] protected NavigationManager Navigation { get; set; }
+    [Inject] protected ClientParameters clientParameters { get; set; }
 
     #endregion
 
@@ -19,12 +21,27 @@ public class UserMenuBase : ComponentBase
 
     #region Properties
 
+    protected bool isDarkMode { get; set; }
     protected string DarkModeIcon = Icons.Material.Outlined.DarkMode;
     protected string DarkModeTooltip = "Dark Mode";
 
     #endregion
 
     #region Methods
+    protected override void OnInitialized()
+    {
+        clientParameters.OnChanged += OnClientParametersChanged;
+    }
+
+    private void OnClientParametersChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        clientParameters.OnChanged -= OnClientParametersChanged;
+    }
 
     protected async Task ToggleDarkMode()
     {

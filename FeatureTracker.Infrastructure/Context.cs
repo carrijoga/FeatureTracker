@@ -1,6 +1,7 @@
 using FeatureTracker.Domain.Model.Categories;
 using FeatureTracker.Domain.Model.Companies;
 using FeatureTracker.Domain.Model.Persons;
+using FeatureTracker.Domain.Model.Profiles;
 using FeatureTracker.Domain.Model.Requests;
 using FeatureTracker.Domain.Model.Teams;
 using FeatureTracker.Domain.Model.Users;
@@ -13,14 +14,12 @@ public class Context : DbContext
     #region Constructors
     public Context() => Database.SetCommandTimeout(12000);
 
-    public Context(DbContextOptions<Context> options) : base(options)
-    {
-
-    }
+    public Context(DbContextOptions<Context> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(Context).Assembly);
+
         base.OnModelCreating(modelBuilder);
     }
     #endregion
@@ -30,6 +29,11 @@ public class Context : DbContext
     #region Users
     public DbSet<User> Users { get; set; }
     public DbSet<UserInvite> UserInvite { get; set; }
+    #endregion
+
+    #region Profiles
+    public DbSet<Profile> Profile { get; set; }
+    public DbSet<ProfileScreens> ProfileScreens { get; set; }
     #endregion
 
     #region Persons

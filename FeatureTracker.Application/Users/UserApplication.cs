@@ -15,6 +15,7 @@ public class UserApplication : BaseApplication
     public async Task<User> GetUserByEmailOrUserNameAsync(string userEmailOrUsername) =>
         await _context.Users
             .Include(x => x.Person)
+            .Include(x => x.Profile)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Email == userEmailOrUsername || x.Username == userEmailOrUsername);
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Security.Authentication;
+using FeatureTracker.Shared.System;
 using ApplicationException = FeatureTracker.Shared.Security.ApplicationException;
 
 namespace FeatureTracker.Application.Authentication;
@@ -210,4 +211,23 @@ public class AuthApplication : BaseApplication
         await _context.Users.AnyAsync(x => x.Username == username);
 
     #endregion
+
+    public async Task<ClientParameters> GetClientParametersAsync(string? userAuthenticatedId)
+    {
+        ArgumentNullException.ThrowIfNull(userAuthenticatedId);
+
+        return await _context.Users
+            .AsNoTracking()
+            .Where(x => x.Id == Guid.Parse(userAuthenticatedId))
+            .Include(x => x.Person).AsNoTracking()
+            .Include(x => x.Profile).AsNoTracking()
+            .Select(x => new ClientParameters
+            {
+                PersonName = x.Person.GetFullName(),
+                ProfileName = x.Profile.ProfileName,
+                Username = x.Username,
+                Email = x.Email,
+            })
+            .FirstOrDefaultAsync() ?? new ClientParameters();
+    }
 }

@@ -1,6 +1,6 @@
 using FeatureTracker.Client;
-using FeatureTracker.Client.Extensions;
 using FeatureTracker.Client.Services.Authentication;
+using FeatureTracker.Shared.System;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -19,6 +19,7 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<ClientParameters>();
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>(
     provider => provider.GetRequiredService<AuthenticationService>());

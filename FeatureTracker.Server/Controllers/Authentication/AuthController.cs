@@ -1,5 +1,6 @@
 using FeatureTracker.Application.Authentication;
 using FeatureTracker.Shared.Account;
+using FeatureTracker.Shared.System;
 using FeatureTracker.Shared.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred."); 
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred.");
         }
     }
 
@@ -107,6 +108,19 @@ public class AuthController : ControllerBase
         try
         {
             return Ok(await _authApplication.ValidateTokenAsync(token));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet(nameof(GetClientParameters))]
+    public async Task<ActionResult<ClientParameters>> GetClientParameters()
+    {
+        try
+        {
+            return Ok(await _authApplication.GetClientParametersAsync(this.GetUserAuthenticatedId()));
         }
         catch (Exception ex)
         {

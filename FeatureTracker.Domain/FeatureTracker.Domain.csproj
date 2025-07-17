@@ -18,4 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\FeatureTracker.Shared\FeatureTracker.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Model\Permission.cs" />
+    <Compile Remove="Model\ProfilePermission.cs" />
+    <Compile Remove="Model\UserProfile.cs" />
+  </ItemGroup>
 </Project>

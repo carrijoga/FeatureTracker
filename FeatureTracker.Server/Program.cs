@@ -1,8 +1,7 @@
-using System.Reflection;
-using System.Text;
 using FeatureTracker.Infrastructure;
 using FeatureTracker.Server;
 using FeatureTracker.Server.Services;
+using FeatureTracker.Shared.System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using StackExchange.Redis;
+using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

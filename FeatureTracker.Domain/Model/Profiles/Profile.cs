@@ -11,11 +11,12 @@ public class Profile
     public string ProfileName { get; set; }
     public string Description { get; set; }
 
+    public List<ProfileScreens> Screens { get; set; }
 
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public int CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public int UpdatedBy { get; set; }
+    public int? UpdatedBy { get; set; }
     #endregion
 }
