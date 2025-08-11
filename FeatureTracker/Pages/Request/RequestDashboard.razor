@@ -1,5 +1,94 @@
 @page "/request/dashboard"
+@inherits RequestDashboardBase
 
 <PageTitle>FeatureTracker - Requests</PageTitle>
 
-<h1>Heey!</h1>
+<div class="d-flex flex-column gap-6 px-2">
+    <MudGrid Class="align-center">
+        <MudItem xs=12 sm=12 md=4 lg=4 xl=4 xxl=4>
+            <MudText Typo="Typo.h3">Feature Requests</MudText>
+            <MudText Typo="Typo.body1">View and manage all feature improvement requests.</MudText>
+        </MudItem>
+        <MudItem xs=12 sm=12 md=8 lg=8 xl=8 xxl=8>
+            <MudGrid Justify="Justify.FlexEnd" Class="align-center" Spacing="1">
+                <MudItem xs=12 sm=12 md=7 lg=7 xl=7 xxl=7>
+                    <MudTextField @bind-Value="SearchText"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  IconSize="Size.Small"
+                                  Label="Search requests"
+                                  Variant="Variant.Outlined"
+                                  Clearable="true"></MudTextField>
+                </MudItem>
+                <MudItem xs=12 sm=12 md=3 lg=3 xl=3 xxl=3>
+                    <MudSelect T="string"
+                               Adornment="Adornment.Start"
+                               AdornmentIcon="@Icons.Material.Outlined.FilterAlt"
+                               IconSize="Size.Small"
+                               Variant="Variant.Outlined">
+                        <MudSelectItem T="string">
+                            All Status
+                        </MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid>
+        <MudItem xs=12 sm=12 md=12 lg=12 xl=12 xxl=12 Class="d-flex justify-end">
+            <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="py-2 px-4" OnClick="(() => CreateNewRequest())">New Request</MudButton>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid>
+        <MudItem xs=12 sm=12 md=12 lg=12 xl=12 xxl=12>
+            <MudTable Items="RequestDashboard" Breakpoint="Breakpoint.Sm"
+                      FixedHeader="true" FixedFooter="true"
+                      Hover Loading="LoadingActive"
+                      LoadingProgressColor="Color.Primary">
+                <HeaderContent>
+                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">ID</MudText></MudTh>
+                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Title</MudText></MudTh>
+                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Status</MudText></MudTh>
+                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Submitted</MudText></MudTh>
+                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Est. Delivery</MudText></MudTh>
+                    <MudTh Style="width: 80px;"><MudText Style="font-size: 11px; font-weight: bold;">Comments</MudText></MudTh>
+                    <MudTh Style="width: 80px;"></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="ID">@context.Id</MudTd>
+                    <MudTd DataLabel="Title">
+                        <div class="d-flex flex-column">
+                            <a style="font-size: 1rem;">@context.Title</a>
+                            <a style="font-size: 0.700rem;color: gray;">@context.ShortDescription</a>
+                        </div>
+                    </MudTd>
+                    <MudTd DataLabel="Status"><MudChip Color="@context.StatusColor" Value="@context.Status" Variant="Variant.Text">@context.Status</MudChip></MudTd>
+                    <MudTd DataLabel="Submitted">@context.Submitted.ToString("dd/MM/yyyy")</MudTd>
+                    <MudTd DataLabel="Est. Delivery">
+                        <div class="d-flex align-center gap-2">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Rounded.AccessTime" Color="Color.Primary"></MudIcon>
+                            @context.EstimatedDelivery.ToString("dd/MM/yyyy")
+                        </div>
+                    </MudTd>
+                    <MudTd DataLabel="Comments">
+                        <div class="d-flex align-center gap-2">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Comment"></MudIcon>
+                            @context.NumberComments
+                        </div>
+                    </MudTd>
+                    <MudTd DataLabel="Actions">
+                        <div class="d-flex flex-row gap-1">
+                            <MudIconButton Icon="@Icons.Material.Outlined.Edit" Size="Size.Small"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Outlined.RemoveRedEye" Size="Size.Small"></MudIconButton>
+                        </div>
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+</div>
