@@ -1,39 +1,80 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
+using FeatureTracker.Client.Models;
+using FeatureTracker.Client.Services;
 
 namespace FeatureTracker.Client.Shared.Layout;
 
-public class NotificationComponentBase : ComponentBase
+public class NotificationComponentBase : ComponentBase, IDisposable
 {
+    [Inject] protected INotificationService NotificationService { get; set; } = default!;
+
     protected bool Open;
-    protected List<TwoStringItems> Content { get; set; }
+    protected List<NotificationModel> Notifications { get; set; } = [];
+    protected int UnreadCount { get; set; }
+
+    protected override void OnInitialized()
+    {
+        NotificationService.OnNotificationsChanged += OnNotificationsChanged;
+        LoadNotifications();
+    }
 
     protected void ToggleOpen()
     {
         Open = !Open;
-
-        VerifyNotificationContentList();
     }
 
-    public void VerifyNotificationContentList()
+    protected void MarkAsRead(Guid notificationId)
     {
-        Content ??= [];
-        if (Content.Count > 1)
-            Content = new List<TwoStringItems>();
+        NotificationService.MarkAsRead(notificationId);
     }
 
-
-    public void AddMoreContent()
+    protected void MarkAllAsRead()
     {
-        var newContent =
-            new TwoStringItems(Guid.NewGuid(), "New Notification! 💻", "Scroll your browser to see effect.");
-        Content.Add(newContent);
+        NotificationService.MarkAllAsRead();
     }
 
-    public void RemoveContent(Guid id)
+    protected void ViewAllNotifications()
     {
-        var item = Content.FirstOrDefault(x => x.Id == id);
-        Content.Remove(item);
+        // TODO: Navigate to a full notifications page
+        // For now, just close the popover
+        Open = false;
+    }
+
+    protected Dictionary<string, List<NotificationModel>> GetGroupedNotifications()
+    {
+        return Notifications
+            .GroupBy(n => n.Category)
+            .OrderBy(g => GetCategoryOrder(g.Key))
+            .ToDictionary(g => g.Key, g => g.ToList());
+    }
+
+    private void LoadNotifications()
+    {
+        Notifications = NotificationService.GetNotifications();
+        UnreadCount = NotificationService.GetUnreadCount();
+    }
+
+    private void OnNotificationsChanged()
+    {
+        LoadNotifications();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private int GetCategoryOrder(string category)
+    {
+        return category switch
+        {
+            "Today" => 1,
+            "Yesterday" => 2,
+            _ when category.Contains("day") => 3,
+            _ => 4
+        };
+    }
+
+    public void Dispose()
+    {
+        NotificationService.OnNotificationsChanged -= OnNotificationsChanged;
     }
 }
 
-public record TwoStringItems(Guid Id, string Title, string Subtitle);
+// Remove the old TwoStringItems record as it's no longer needed

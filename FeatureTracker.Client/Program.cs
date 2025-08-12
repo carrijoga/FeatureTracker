@@ -1,5 +1,6 @@
 using FeatureTracker.Client;
 using FeatureTracker.Client.Services.Authentication;
+using FeatureTracker.Client.Services;
 using FeatureTracker.Shared.System;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -27,6 +28,9 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>(
 
 builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationService>(
     provider => provider.GetRequiredService<AuthenticationService>());
+
+// Register NotificationService
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 //builder.Services.AddAuthenticationServices();
 builder.Services.AddMudServices();

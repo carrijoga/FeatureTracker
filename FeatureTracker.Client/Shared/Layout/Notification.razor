@@ -1,65 +1,153 @@
-﻿@inherits NotificationComponentBase
+@inherits NotificationComponentBase
 
 <MudTooltip Text="Notifications" Arrow="true" Placement="Placement.Bottom">
-    <MudBadge Dot="true" Color="Color.Info">
+    <MudBadge Content="@UnreadCount" Color="Color.Error" Visible="@(UnreadCount > 0)" Max="99">
         <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Size="Size.Small" Color="Color.Inherit"
                        DropShadow="true" OnClick="ToggleOpen"/>
     </MudBadge>
 </MudTooltip>
 
+<MudOverlay @bind-Visible="Open" AutoClose="true" />
 <MudPopover Open="Open"
             OverflowBehavior="OverflowBehavior.FlipAlways"
-            AnchorOrigin="Origin.BottomLeft"
-            TransformOrigin="Origin.TopCenter"
+            AnchorOrigin="Origin.BottomRight"
+            TransformOrigin="Origin.TopRight"
             Paper="false"
             Class="rounded-lg">
-    <MudPaper Outlined="true" Class="px-2 py-4">
-        <div class="d-flex justify-space-between align-center px-2">
-            <MudText Typo="Typo.subtitle2">Notifications</MudText>
-            <MudButton Variant="Variant.Text"
-                       StartIcon="@Icons.Material.Filled.DoneAll"
-                       IconSize="Size.Small"
-                       Color="Color.Secondary"
-                       Style="text-transform: none; font-size: 12px;"
-                       Class="ml-16 mr-n2"
-                       OnClick="AddMoreContent">
-                Mark all as read
-            </MudButton>
+    <MudPaper Outlined="true" Class="px-4 py-4" Style="width: 450px;">
+        <div class="d-flex justify-space-between align-center mb-3">
+            <MudText Typo="Typo.h6">Notifications</MudText>
+            @if (UnreadCount > 0)
+            {
+                <MudButton Variant="Variant.Text"
+                           StartIcon="@Icons.Material.Filled.DoneAll"
+                           IconSize="Size.Small"
+                           Color="Color.Success"
+                           Style="text-transform: none; font-size: 12px;"
+                           OnClick="MarkAllAsRead">
+                    Mark all as read
+                </MudButton>
+            }
         </div>
 
-        <MudSpacer/>
+        <MudDivider Class="mb-3"/>
 
-        <MudDivider FlexItem="true" DividerType="DividerType.FullWidth" Class="my-2" Style="border-color: #505050;"/>
-
-        @if (Content.Count > 1)
+        @if (Notifications.Any())
         {
-            <MudList T="string" Class="d-flex flex-column gap-2">
-                @foreach (var item in Content)
+            var groupedNotifications = GetGroupedNotifications();
+            var displayedCount = 0;
+            const int maxDisplayCount = 4;
+
+            foreach (var group in groupedNotifications)
+            {
+                if (displayedCount < maxDisplayCount)
                 {
-                    <div data-aos="fade-down">
-                        <MudListItem Class="rounded-lg">
-                            <div class="d-flex flex-wrap justify-space-between">
-                                <MudText Typo="Typo.subtitle2">@item.Title</MudText>
-                                <MudIconButton OnClick="() => RemoveContent(item.Id)"
-                                               Icon="@Icons.Material.Filled.Check" Size="Size.Small"/>
+                    <MudText Typo="Typo.subtitle2" Class="mb-2" Style="color: #666;">@group.Key</MudText>
+                    
+                    foreach (var notification in group.Value.Take(maxDisplayCount - displayedCount))
+                    {
+                        displayedCount++;
+                        @* <MudButton Variant="Variant.Text"> *@
+                            <div class="notification-item mb-3 @(notification.IsRead ? "read" : "unread")" style="position: relative;">
+                            <div class="d-flex align-start gap-3">
+                                <div class="notification-icon">
+                                    @if (!string.IsNullOrEmpty(notification.Icon))
+                                    {
+                                        <span style="font-size: 1.2rem;">@notification.Icon</span>
+                                    }
+                                    else
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.Notifications" Size="Size.Small"/>
+                                    }
+                                </div>
+                                <div class="flex-grow-1" style="min-width: 0;">
+                                    <div class="d-flex justify-space-between align-start mb-1">
+                                        <MudText Typo="Typo.subtitle2" Style="font-weight: 600; line-height: 1.2;">
+                                            @notification.Title
+                                        </MudText>
+                                        <div class="d-flex align-center gap-1">
+                                            <MudText Typo="Typo.caption" Style="color: #999; white-space: nowrap;">
+                                                @notification.TimeAgo
+                                            </MudText>
+                                            @if (!notification.IsRead)
+                                            {
+                                                <MudIconButton OnClick="() => MarkAsRead(notification.Id)"
+                                                               Icon="@Icons.Material.Filled.Check" 
+                                                               Size="Size.Small"
+                                                               Style="width: 24px; height: 24px;"/>
+                                            }
+                                        </div>
+                                    </div>
+                                    <MudText Typo="Typo.body2" Style="color: #666; line-height: 1.3; word-wrap: break-word;">
+                                        @notification.Message
+                                    </MudText>
+                                </div>
                             </div>
-                            <MudText Typo="Typo.body2">@item.Subtitle</MudText>
-                        </MudListItem>
-                    </div>
+                            @if (!notification.IsRead)
+                            {
+                                <div style="position: absolute; left: -8px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background-color: #2196F3;"></div>
+                            }
+                        </div>
+                        @* </MudButton> *@
+                    }
                 }
-            </MudList>
+            }
+
+            if (Notifications.Count > maxDisplayCount)
+            {
+                <MudText Typo="Typo.body2" Class="mb-3" Style="color: #666; text-align: center;">
+                    and @(Notifications.Count - maxDisplayCount) more
+                </MudText>
+            }
         }
         else
         {
-            <div>
-                <MudImage/>
-                <MudText>No notification yet</MudText>
+            <div class="d-flex flex-column align-center justify-center" style="padding: 2rem;">
+                <MudIcon Icon="@Icons.Material.Outlined.Notifications" Size="Size.Large" Style="color: #ccc; margin-bottom: 1rem;"/>
+                <MudText Typo="Typo.body1" Style="color: #999;">No notifications yet</MudText>
             </div>
         }
 
-        <div class="d-flex align-center flex-column">
-            <MudDivider FlexItem="true" DividerType="DividerType.Middle" Class="my-2" Style="border-color: #505050;"/>
-            <span style="width: 5px; height: 5px; border-radius: 50%; background-color: #004647;"></span>
+        <MudDivider Class="my-3"/>
+        
+        <div class="d-flex justify-center">
+            <MudButton Variant="Variant.Text" 
+                       Color="Color.Primary" 
+                       OnClick="ViewAllNotifications"
+                       FullWidth="true"
+                       Style="text-transform: none;">
+                View all notifications
+            </MudButton>
         </div>
     </MudPaper>
 </MudPopover>
+
+<style>
+    .notification-item {
+        padding: 8px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+    }
+    
+    .notification-item:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        border: 1px solid;
+        border-color: #6666;
+        transform: scale(1.01);
+        transition: all 0.3s ease;
+    }
+    
+    .notification-item.unread {
+        background-color: rgba(33, 150, 243, 0.05);
+    }
+    
+    .notification-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 50%;
+    }
+</style>
