@@ -1,0 +1,92 @@
+@inherits FileUploadComponentBase
+
+<div class="file-upload-container">
+    <!-- Upload Zone -->
+    <div class="upload-zone @dragClass" 
+         @onclick="OpenFileDialog"
+         @ondrop="HandleDrop" 
+         @ondrop:preventDefault="true"
+         @ondragover="HandleDragOver" 
+         @ondragover:preventDefault="true"
+         @ondragenter="HandleDragEnter" 
+         @ondragenter:preventDefault="true"
+         @ondragleave="HandleDragLeave">
+        
+        <div class="upload-content">
+            <!-- Upload Icon -->
+            <div class="upload-icon">
+                <MudIcon Icon="@Icons.Material.Outlined.CloudUpload" Size="Size.Large" />
+            </div>
+            
+            <!-- Main Text -->
+            <MudText Typo="Typo.h6" Class="upload-title">
+                @InfoDragDrop
+            </MudText>
+            
+            <!-- Support Information -->
+            <MudText Typo="Typo.body2" Class="upload-subtitle">
+                Supports images, PDFs, documents, and archives up to 10MB each
+            </MudText>
+            
+            <!-- File Count Information -->
+            <MudText Typo="Typo.body2" Class="upload-count">
+                Maximum @MaxFiles files (@SelectedFiles.Count/@MaxFiles used)
+            </MudText>
+        </div>
+    </div>
+
+    <!-- Hidden File Input -->
+    <InputFile @ref="inputFileRef" 
+               id="fileInput"
+               OnChange="OnInputFileChanged" 
+               multiple 
+               accept="@string.Join(",", AllowedExtensions)"
+               style="display: none;" />
+    
+    <!-- Error Messages -->
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <MudAlert Severity="Severity.Error" Class="mt-3" ShowCloseIcon="true" CloseIconClicked="ClearError">
+            @ErrorMessage
+        </MudAlert>
+    }
+
+    <!-- Attached Files Section -->
+    @if (SelectedFiles.Any())
+    {
+        <div class="attached-files-section">
+            <MudText Typo="Typo.body1" Class="attached-files-title">
+                Attached Files (@SelectedFiles.Count)
+            </MudText>
+            
+            <div class="attached-files-list">
+                @foreach (var file in SelectedFiles)
+                {
+                    <div class="file-item">
+                        <div class="file-icon-container">
+                            <MudIcon Icon="@GetFileIcon(file)" Size="Size.Medium" Class="file-type-icon" />
+                        </div>
+                        
+                        <div class="file-info">
+                            <MudText Typo="Typo.body1" Class="file-name">@file.Name</MudText>
+                            <div class="file-details">
+                                <MudText Typo="Typo.caption" Class="file-size">@FormatFileSize(file.Size)</MudText>
+                                <MudText Typo="Typo.caption" Class="file-type">@GetFileType(file)</MudText>
+                            </div>
+                        </div>
+                        
+                        <MudIconButton Icon="@Icons.Material.Outlined.Close" 
+                                       Size="Size.Small" 
+                                       OnClick="() => RemoveFile(file)"
+                                       Class="remove-file-button"
+                                       Variant="Variant.Text" />
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <MudText Typo="Typo.caption" Class="upload-help-text">
+        Upload mockups, screenshots, documents, or other files to support your request. Maximum @MaxFiles files, @FormatFileSize(MaxFileSize) each.
+    </MudText>
+</div>

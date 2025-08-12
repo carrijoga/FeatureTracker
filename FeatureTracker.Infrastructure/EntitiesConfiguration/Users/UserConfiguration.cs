@@ -30,9 +30,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithMany()
             .HasForeignKey(x => x.PersonId);
 
-        builder.HasOne(x => x.Profile)
-            .WithMany()
-            .HasForeignKey(x => x.ProfileId);
+        //builder.HasOne(x => x.Profile)
+        //    .WithMany()
+        //    .HasForeignKey(x => x.ProfileId);
 
         //builder.HasOne(x => x.Company)
         //    .WithOne()

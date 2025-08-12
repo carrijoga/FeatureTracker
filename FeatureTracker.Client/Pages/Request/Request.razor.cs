@@ -4,6 +4,10 @@ namespace FeatureTracker.Client.Pages.Request;
 
 public class RequestBase : ComponentBase
 {
+    #region Inject
+    [Inject] private NavigationManager Navigation { get; set; }
+    #endregion
+
     #region Parameters
     [Parameter] public int Id { get; set; }
     #endregion
@@ -23,6 +27,11 @@ public class RequestBase : ComponentBase
     #endregion
 
     #region Methods
+    protected async Task BackToRequests()
+    {
+        Navigation.NavigateTo("/request/dashboard");
+    }
+
     protected async Task HandleTitleAsync()
     {
         //Will implement later the service from GeminiService to handle the title

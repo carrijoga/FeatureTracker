@@ -4,6 +4,7 @@ using FeatureTracker.Shared.System;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Extensions;
 using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -29,5 +30,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, AuthenticationService>(
 
 //builder.Services.AddAuthenticationServices();
 builder.Services.AddMudServices();
+builder.Services.AddMudServicesWithExtensions();
+builder.Services.AddMudExtensions();
 
 await builder.Build().RunAsync();

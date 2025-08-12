@@ -33,7 +33,7 @@
     <ProjectReference Include="..\FeatureTracker.Domain\FeatureTracker.Domain.csproj" />
     <ProjectReference Include="..\FeatureTracker.Infrastructure\FeatureTracker.Infrastructure.csproj" />
     <ProjectReference Include="..\FeatureTracker.Shared\FeatureTracker.Shared.csproj" />
-    <ProjectReference Include="..\FeatureTracker\FeatureTracker.Client.csproj" />
+    <ProjectReference Include="..\FeatureTracker.Client\FeatureTracker.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>

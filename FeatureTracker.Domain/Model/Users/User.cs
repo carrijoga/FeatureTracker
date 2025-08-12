@@ -30,6 +30,7 @@ public class User
     public string PasswordHash { get; set; }
     public string PasswordSalt { get; set; }
     public int PasswordIterations { get; set; }
+    public HashAlgorithmType PasswordAlgorithm { get; set; } = HashAlgorithmType.Sha512;
     public bool IsActive { get; set; }
     public bool IsAdmin { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -45,7 +46,7 @@ public class User
 
     public User CreateNewUser(UserRegisterViewModel userRegisterInfo, Company company, IPasswordHasher passwordHasher)
     {
-        var (hash, salt, iterations) = passwordHasher.HashPassword(userRegisterInfo.Password);
+        var (hash, salt, iterations, algorithm) = passwordHasher.HashPassword(userRegisterInfo.Password);
 
         return new User
         {
@@ -54,6 +55,7 @@ public class User
             PasswordHash = hash,
             PasswordSalt = salt,
             PasswordIterations = iterations,
+            PasswordAlgorithm = algorithm,
             Username = userRegisterInfo.Username,
             Person = new Person().CreateNewPerson(userRegisterInfo)
         };
@@ -64,7 +66,8 @@ public class User
             password,
             PasswordHash,
             PasswordSalt,
-            PasswordIterations);
+            PasswordIterations,
+            PasswordAlgorithm);
 
     public string GetFullName() =>
         $"{Person?.GetFullName()}";

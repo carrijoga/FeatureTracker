@@ -20,7 +20,7 @@ public sealed class PasswordHasher : IPasswordHasher
 
     #region Methods
 
-    public (string hash, string salt, int iterations) HashPassword(string password)
+    public (string hash, string salt, int iterations, HashAlgorithmType algorithm) HashPassword(string password)
     {
         var saltBytes = RandomNumberGenerator.GetBytes(_settings.SaltSize);
         var combined = CombinePasswordAndPepper(password, _settings.Pepper);
@@ -37,26 +37,27 @@ public sealed class PasswordHasher : IPasswordHasher
         CryptographicOperations.ZeroMemory(saltBytes);
         CryptographicOperations.ZeroMemory(hashBytes);
 
-        return (hash, salt, iterations: _settings.Iterations);
+        return (hash, salt, iterations: _settings.Iterations, algorithm: _settings.Algorithm);
     }
 
-    public bool Verify(string password, string passwordHash, string passwordSalt, int passwordIterations)
+    public bool Verify(string password, string passwordHash, string passwordSalt, int passwordIterations, HashAlgorithmType algorithm)
     {
         var salt = Convert.FromBase64String(passwordSalt);
         var combined = CombinePasswordAndPepper(password, _settings.Pepper);
         var expectedHash = Convert.FromBase64String(passwordHash);
+        var hashAlgorithm = algorithm.ToHashAlgorithmName();
 
         var computedHash = Rfc2898DeriveBytes.Pbkdf2(
             password: combined,
             salt: salt,
             iterations: passwordIterations,
-            hashAlgorithm: _algorithm,
+            hashAlgorithm: hashAlgorithm,
             outputLength: _settings.HashSize);
 
         return CryptographicOperations.FixedTimeEquals(expectedHash, computedHash);
     }
 
-    public static byte[] CombinePasswordAndPepper(string password, string pepper)
+    private static byte[] CombinePasswordAndPepper(string password, string pepper)
     {
         if (string.IsNullOrEmpty(password))
             throw new ArgumentNullException(nameof(password));

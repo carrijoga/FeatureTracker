@@ -18,7 +18,7 @@ COPY ["FeatureTracker.Application/FeatureTracker.Application.csproj", "FeatureTr
 COPY ["FeatureTracker.Infrastructure/FeatureTracker.Infrastructure.csproj", "FeatureTracker.Infrastructure/"]
 COPY ["FeatureTracker.Domain/FeatureTracker.Domain.csproj", "FeatureTracker.Domain/"]
 COPY ["FeatureTracker.Shared/FeatureTracker.Shared.csproj", "FeatureTracker.Shared/"]
-COPY ["FeatureTracker/FeatureTracker.Client.csproj", "FeatureTracker/"]
+COPY ["FeatureTracker.Client/FeatureTracker.Client.csproj", "FeatureTracker.Client/"]
 RUN dotnet restore "./FeatureTracker.Server/FeatureTracker.Server.csproj"
 COPY . .
 WORKDIR "/src/FeatureTracker.Server"
