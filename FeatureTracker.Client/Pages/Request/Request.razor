@@ -44,6 +44,7 @@
                             </MudItem>
                             <MudItem xs=12 sm=12 md=12 lg=12 xl=12 xxl=12>
                                 <MudTextField T="string"
+                                              AutoFocus
                                               Required
                                               Variant="Variant.Outlined"
                                               Label="Description"
@@ -72,70 +73,24 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem xs=12 sm=12 md=12 lg=12 xl=12 xxl=12>
-                               @*  <MudCard>
-                                    <MudCardHeader>
-                                        <MudText Typo="Typo.h6">Attachments</MudText>
-                                        <MudText Typo="Typo.body2">You can attach files to help us understand your request better.</MudText>
-                                    </MudCardHeader>
-                                    <MudCardContent>
-                                        <MudExUploadEdit T="UploadableFile"
-                                                         AllowAudioRecording="false"
-                                                         AllowVideoCapture="false"
-                                                         RemoveItemButtonAlwaysRight="true"
-                                                         ColoredImagesForExternalFilePicker="false"
-                                                         ButtonVariant="MudBlazor.Variant.Text"
-                                                         Color="@("var(--mud-palette-lines-inputs)")"
-                                                         ErrorAnimation="MudBlazor.Extensions.Options.AnimationType.Pulse"
-                                                         Variant="MudBlazor.Variant.Text"
-                                                         AllowRename="false"
-                                                         ShowRenameButton="false"
-                                                         AllowExternalUrl="false"
-                                                         AllowGoogleDrive="false"
-                                                         AllowDropBox="false"
-                                                         AllowOneDrive="false"
-                                                         MaxHeight="0"
-                                                         MinHeight="0"
-                                                         MaxMultipleFiles="5"
-                                                         AllowMultiple="true"
-                                                         AllowFolderUpload="false"
-                                                         AllowPreview="false"
-                                                         ShowFileUploadButton="true"
-                                                         ShowFolderUploadButton="false"
-                                                         ShowClearButton="false"
-                                                         AllowRemovingItems="true"
-                                                         SelectItemsMode="MudBlazor.Extensions.Components.SelectItemsMode.None"
-                                                         AutoExtractArchive="false"
-                                                         AllowDuplicates="false"
-                                                         DisplayErrors="true"
-                                                         RemoveErrorAfter="@(System.TimeSpan.Parse("00:00:02"))"
-                                                         AutoRemoveError="true"
-                                                         RemoveErrorOnChange="false"
-                                                         AllowDrop="true"
-                                                         ColorizeIcons="true"
-                                                         DropZoneClickAction="MudBlazor.Extensions.Components.DropZoneClickAction.UploadFile"
-                                                         AutoLoadFileDataBytes="true"
-                                                         LoadFileDataBytesInBackground="true"
-                                                         ShowProgressForLoadingData="true"
-                                                         Required="false"
-                                                         RequiredError="Required"
-                                                         Error="false"
-                                                         Style="max-height: 400px; width: 100%"></MudExUploadEdit>
-                                    </MudCardContent>
-                                </MudCard> *@
-                                <MudCard>
-                                    <MudCardContent>
+                                <MudCard Elevation="0" Class="p-0">
+                                    <MudCardContent Class="p-0">
                                         <FileUploadComponent />
                                     </MudCardContent>
                                 </MudCard>
                             </MudItem>
                             <MudItem xs=12 sm=12 md=12 lg=12 xl=12 xxl=12>
-                                <MudCard>
-                                    <MudText>
-                                        I understand that submitting a feature request does not guarantee implementation.
-                                    </MudText>
-                                    <MudText>
-                                        All requests are reviewed by our team, and we will provide feedback on the feasibility and potential timeline for implementation.
-                                    </MudText>
+                                <MudCard Elevation="0" Style="border: 1px solid #666;">
+                                    <MudCardContent>
+                                        <MudCheckBox T="bool">
+                                            <MudText Typo="Typo.body2" Style="font-weight: bold;">
+                                                I understand that submitting a feature request does not guarantee implementation.
+                                            </MudText>
+                                            <MudText Typo="Typo.caption" Style="color: #a1a1aa;">
+                                                All requests are reviewed by our team, and we will provide feedback on the feasibility and potential timeline for implementation.
+                                            </MudText>
+                                        </MudCheckBox>
+                                    </MudCardContent>
                                 </MudCard>
                             </MudItem>
                         </MudGrid>

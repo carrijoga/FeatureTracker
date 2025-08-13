@@ -7,13 +7,13 @@
     </MudBadge>
 </MudTooltip>
 
-<MudOverlay @bind-Visible="Open" AutoClose="true" />
 <MudPopover Open="Open"
             OverflowBehavior="OverflowBehavior.FlipAlways"
             AnchorOrigin="Origin.BottomRight"
             TransformOrigin="Origin.TopRight"
             Paper="false"
             Class="rounded-lg">
+    <MudOverlay @bind-Visible="Open" AutoClose="true" />
     <MudPaper Outlined="true" Class="px-4 py-4" Style="width: 450px;">
         <div class="d-flex justify-space-between align-center mb-3">
             <MudText Typo="Typo.h6">Notifications</MudText>

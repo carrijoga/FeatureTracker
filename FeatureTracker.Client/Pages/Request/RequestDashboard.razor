@@ -46,14 +46,39 @@
             <MudTable Items="RequestDashboard" Breakpoint="Breakpoint.Sm"
                       FixedHeader="true" FixedFooter="true"
                       Hover Loading="LoadingActive"
-                      LoadingProgressColor="Color.Primary">
+                      LoadingProgressColor="Color.Primary"
+                      SortLabel="Sort By">
                 <HeaderContent>
-                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">ID</MudText></MudTh>
-                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Title</MudText></MudTh>
-                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Status</MudText></MudTh>
-                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Submitted</MudText></MudTh>
-                    <MudTh><MudText Style="font-size: 11px; font-weight: bold;">Est. Delivery</MudText></MudTh>
-                    <MudTh Style="width: 80px;"><MudText Style="font-size: 11px; font-weight: bold;">Comments</MudText></MudTh>
+                    <MudTh Style="width: 150px;">
+                        <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<RequestDashboardModel, string>(x => x.Id)">
+                            <MudText Style="font-size: 11px; font-weight: bold;">ID</MudText>
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<RequestDashboardModel, string>(x => x.Title)">
+                            <MudText Style="font-size: 11px; font-weight: bold;">Title</MudText>
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh Style="width: 150px;">
+                        <MudTableSortLabel SortBy="new Func<RequestDashboardModel, string>(x => x.Status)">
+                            <MudText Style="font-size: 11px; font-weight: bold;">Status</MudText>
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh Style="width: 100px;">
+                        <MudTableSortLabel SortBy="new Func<RequestDashboardModel, object>(x => x.Submitted)">
+                            <MudText Style="font-size: 11px; font-weight: bold;">Submitted</MudText>
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh Style="width: 100px;">
+                        <MudTableSortLabel SortBy="new Func<RequestDashboardModel, object>(x => x.EstimatedDelivery)">
+                            <MudText Style="font-size: 11px; font-weight: bold;">Est. Delivery</MudText>
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh Style="width: 80px;">
+                        <MudTableSortLabel SortBy="new Func<RequestDashboardModel, object>(x => x.NumberComments)">
+                            <MudText Style="font-size: 11px; font-weight: bold;">Comments</MudText>
+                        </MudTableSortLabel>
+                    </MudTh>
                     <MudTh Style="width: 80px;"></MudTh>
                 </HeaderContent>
                 <RowTemplate>
